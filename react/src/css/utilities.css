@@ -1,0 +1,134 @@
+.loading {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #000000;
+    border-radius: 50%;
+    animation: spin 1s ease-in-out infinite;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+  display: flex;
+  justify-content: right;
+}
+
+.href-noline {
+  text-decoration: none;
+}
+
+.href-noline-b {
+  text-decoration: none;
+  color: black;
+}
+
+.href-noline-w {
+  text-decoration: none;
+  color: white;
+}
+
+.href-noline-in {
+  text-decoration: none;
+  color: white;
+}
+
+.href-noline-in:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.set-fisrt-upper::first-letter {
+  text-transform: capitalize;
+}
+
+@keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .card-margin {
+    background-color: rgba(21, 25, 29, 0.773);
+      margin: 10px;
+      width: auto;
+  }
+  
+  .btn-margin button {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .btn-up button {
+    width: 40%;
+  }
+
+  .full-height {
+    height: 80vh;
+  }
+
+  .test-bg-blue {
+    background-color: blue;
+  }
+
+  .test-bg-yellow {
+    background-color: yellow;
+  }
+
+  .test-bg-red {
+    background-color: red;
+  }
+
+  .test-bg-green {
+    background-color: green;
+  }
+
+  .download-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    background-image: url('./../img/download.png');
+    background-size: cover;
+  }
+
+  .scroll-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: visible;
+  }
+
+  .tagBarHome .row{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .tagBarHome .button-tag{
+    color: white;
+    border: none;
+    background-color: #4c4c4c;
+    font-weight: bold;
+    border-radius: 5px;
+    height: 35px;
+  }
+
+  .tagBarHome .button-tag:hover{
+    color: black;
+    background-color: white;
+  }
+
+  .showVid h3{
+    color: white;
+    font-weight: bold;
+  }

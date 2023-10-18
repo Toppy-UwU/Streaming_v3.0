@@ -1,0 +1,41 @@
+.CircularProgressbar-path {
+    stroke: white;
+}
+
+.CircularProgressbar-trail {
+    stroke: gray;
+}
+
+.CircularProgressbar-text {
+    fill: yellow;
+}
+
+.CircularProgressbar-background {
+    fill: green;
+}
+
+.Monitor .ProgressCircle {
+    width: 12rem;
+    height: 12rem;
+}
+
+
+.Monitor .showRow1 .card {
+    background-color: #2C3034;
+    border-radius: 10px;
+}
+
+.Monitor .showRow1 .card-body h5,
+strong {
+    color: white;
+}
+
+.Monitor .showRow2 .card {
+    background-color: #2C3034;
+    border-radius: 10px;
+}
+
+.Monitor .showRow2 .card-body h5,
+strong {
+    color: white;
+}

@@ -1,0 +1,11 @@
+# Stage 2: Serve the React app using Nginx
+FROM nginx:alpine
+
+# Copy the built React app from the build stage to the Nginx public directory
+COPY ./react/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

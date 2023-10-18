@@ -1,0 +1,203 @@
+.showSearch {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.showSearch img {
+    width: 320px;
+    height: 180px;
+    border-radius: 15px;
+    margin-left: 80px;
+}
+
+.noLink {
+    text-decoration: none;
+    color: white;
+}
+
+.text-section {
+    padding: 35px;
+}
+
+.text-section h4 {
+    font-size: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-section p {
+    font-size: 15px;
+    opacity: 70%;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.showUserSearch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.showUserSearch img {
+    width: 180px;
+    border-radius: 50%;
+    margin-left: 140px;
+}
+
+.text-Username {
+    padding-left: 80px;
+}
+
+.text-Username h4 {
+    font-size: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-Username p {
+    font-size: 15px;
+    opacity: 70%;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.searchBtn {
+    margin-left: auto;
+    margin-right: 80px;
+}
+
+.notfound-Search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.notfound-Search i {
+    font-size: 100px;
+    color: white;
+}
+
+.notfound-Search p {
+    color: white;
+    font-size: 20px;
+}
+
+.notfound-Search b {
+    color: yellow;
+}
+
+@media (max-width : 768px) {
+    .showSearch {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .showSearch img {
+        width: 260px;
+        height: 150px;
+        margin-left: 20px;
+    }
+
+    .text-section {
+        padding: 20px;
+    }
+
+    .text-section h4 {
+        font-size: 17px;
+    }
+
+    .text-section p {
+        font-size: 13px;
+    }
+
+    .showUserSearch img {
+        width: 140px;
+        margin-left: 60px;
+    }
+
+    .text-Username {
+        padding-left: 50px;
+    }
+
+    .text-Username h4 {
+        font-size: 17px;
+    }
+
+    .text-Username p {
+        font-size: 13px;
+    }
+
+    .searchBtn {
+        margin-right: 20px;
+    }
+
+    .searchBtn span {
+        display: none;
+    }
+}
+
+@media (max-width : 500px) {
+    .showSearch {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .showSearch img {
+        width: 150px;
+        height: 100px;
+        margin-left: 0px;
+    }
+
+    .text-section {
+        padding: 10px;
+    }
+
+    .text-section h4 {
+        font-size: 15px;
+    }
+
+    .text-section p {
+        font-size: 12px;
+    }
+
+    .showUserSearch img {
+        width: 80px;
+        margin-left: 0px;
+    }
+
+    .text-Username {
+        padding-left: 15px;
+    }
+
+    .text-Username h4 {
+        font-size: 15px;
+    }
+
+    .text-Username p {
+        font-size: 12px;
+    }
+
+    .searchBtn {
+        margin-right: 2px;
+    }
+
+    .searchBtn span {
+        display: none;
+    }
+}

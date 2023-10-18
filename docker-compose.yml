@@ -1,0 +1,34 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.4.27
+    container_name: my-mariadb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: [ROOT_PASSWORD]
+      MYSQL_DATABASE: [MYSQL_DEFAULT_DB]
+      MYSQL_USER: [MYSQL_DEFAULT_USER]
+      MYSQL_PASSWORD: [MYSQL_DEFAULT_USER_PASSWORD]
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./streaming.sql:/docker-entrypoint-initdb.d/init.sql
+
+  flaskapp:
+    build: ./python
+    environment:
+      SERVER_IP: [HOST_IP]
+      MYSQL_HOST: [MYSQL_IP]
+      MYSQL_USER: [MYSQL_DEFAULT_USER]
+      MYSQL_DATABASE: [MYSQL_DEFAULT_DB]
+      MYSQL_PASSWORD: [MYSQL_DEFAULT_USER_PASSWORD]
+    ports:
+      - "8900:8900"
+    volumes:
+      - ./python:/app
+
+  react-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    ports:
+      - "80:80"

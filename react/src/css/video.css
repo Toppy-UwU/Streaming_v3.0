@@ -1,0 +1,47 @@
+.video-card {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.video-card .vidInfo h6 {
+    color: white;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.video-card .vidInfo i {
+    color: white;
+}
+
+.video-card .LinkStyle {
+    text-decoration: none;
+    color: white;
+}
+
+.video-card .imgcard {
+    position: relative;
+}
+
+.video-card .imgcard .card-img-top {
+    border-radius: 10px;
+    aspect-ratio: 16/9;
+}
+
+.video-card .imgcard h6 {
+    margin: 0;
+    color: white;
+    text-align: right;
+    font-size: medium;
+}
+
+.video-card .vidInfo {
+    margin-top: 15px;
+}
+
+.video-card .UserVid h6{
+    color: white;
+    opacity: 75%;
+}

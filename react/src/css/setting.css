@@ -1,0 +1,117 @@
+.User-Info .card {
+    background-color: #2C3034;
+}
+
+.Setting-Menu .card {
+    background-color: #2C3034;
+}
+
+.User-Info .UserImg {
+    width: 10rem;
+    border-radius: 50%;
+}
+
+.User-Info .UserBanner {
+    width: 25rem;
+    height: 15rem;
+    border-radius: 10px;
+}
+
+.User-Info h4 {
+    color: white;
+    font-weight: bold;
+}
+
+.User-Info p {
+    color: white;
+    font-size: 16px;
+    opacity: 70%;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Setting-Menu .card h4 {
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.Setting-Menu .card p {
+    color: white;
+    opacity: 70%;
+    font-size: 12px;
+}
+
+.SettingLink :hover {
+    background-color: #3f3f3f;
+    border-radius: 10px;
+}
+
+.PageTitle h2 {
+    color: white;
+    font-weight: 600;
+    margin-left: 20px;
+}
+
+.PageTitle p {
+    color: white;
+    margin-left: 20px;
+    opacity: 70%;
+}
+
+@media (max-width: 600px) {
+    .User-Info .UserImg {
+        width: 7rem;
+        border-radius: 50%;
+    }
+
+    .User-Info .UserBanner {
+        width: 15rem;
+        height: 10rem;
+    }
+
+    .User-Info h4 {
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .User-Info p {
+        color: white;
+        font-size: 14px;
+    }
+
+    .btn.btn-success .sr-only {
+        display: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .User-Info .UserImg {
+        width: 6rem;
+        border-radius: 50%;
+    }
+
+    .User-Info h4 {
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .User-Info p {
+        color: white;
+        font-size: 14px;
+    }
+
+    .btn.btn-success .sr-only {
+        display: none;
+    }
+}

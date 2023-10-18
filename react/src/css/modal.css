@@ -1,0 +1,45 @@
+.PageTitle h4 {
+    color: white;
+    font-weight: 600;
+}
+
+.PageTitle p {
+    color: white;
+    margin-left: 20px;
+}
+
+.UpdateUser .UpdatePicTitle p {
+    color: white;
+    font-weight: bold;
+}
+
+.UpdatePicImg .UserImg {
+    border-radius: 50%;
+    width: 150px;
+}
+
+.TagButtonModal {
+    color: white;
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.UpdatePicImg .BanImg {
+    width: 22rem;
+    height: 12rem;
+    border-radius: 6%;
+}
+
+.UserSection input {
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .UpdateUser .UpdatePicTitle span {
+        display: none;
+    }
+}

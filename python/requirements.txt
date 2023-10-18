@@ -1,0 +1,9 @@
+Flask
+Flask-Cors
+python-ffmpeg-video-streaming
+Pillow
+PyJWT
+opencv-python
+bcrypt
+psutil
+mysql-connector-python

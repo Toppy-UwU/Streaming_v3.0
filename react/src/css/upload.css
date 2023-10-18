@@ -1,0 +1,42 @@
+.Title h2 {
+    color: white;
+    font-weight: 600;
+    margin-left: 20px;
+}
+
+.upload-card {
+    background-color: darkgray;
+    transition: 0.5s;
+}
+
+.upload-card:hover {
+    background-color: lightgray;
+    color: black;
+}
+
+.btn-button {
+    color: #fff;
+    border: none;
+    padding: 8px 35px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.btn-card {
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.vidNameTitle h5 {
+    color: white;
+    font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
