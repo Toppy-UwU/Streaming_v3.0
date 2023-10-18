@@ -72,11 +72,11 @@ flaskapp:
 			- `npm install`
 			- `npm install bootstrap-icons` *just in case*
 			- `npm run build`
-		- after react finish build `cd` back to main directory
-		- use command `docker-compose build` to create image
-		- after docker-compose finish build 
-			- `docker-compose up` `-d(optional)` 
-		- now everything ready 
+	- after react finish build `cd` back to main directory
+	- use command `docker-compose build` to create image
+	- after docker-compose finish build 
+		- `docker-compose up` `-d(optional)` 
+	- now everything ready 
 
 ---
 
