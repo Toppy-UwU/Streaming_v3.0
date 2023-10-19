@@ -24,7 +24,7 @@ services:
     ports:
       - "8900:8900"
     volumes:
-      - ./python:/app
+      - ./python:/app/python
 
   react-app:
     build:
