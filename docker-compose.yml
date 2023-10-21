@@ -4,10 +4,10 @@ services:
     image: mariadb:10.4.27
     container_name: my-mariadb-container
     environment:
-      MYSQL_ROOT_PASSWORD: 6yVXoz+RLF2NXmwHnp/ffnzFZ
-      MYSQL_DATABASE: streaming
-      MYSQL_USER: streaming_user
-      MYSQL_PASSWORD: YAM7iqKzodHNJTHRuNsSjHhCDcrWAdrxhOO79B
+      MYSQL_ROOT_PASSWORD: [ROOT_PASSWORD]
+      MYSQL_DATABASE: [MYSQL_DEFAULT_DB]
+      MYSQL_USER: [MYSQL_DEFAULT_USER]
+      MYSQL_PASSWORD: [MYSQL_DEFAULT_USER_PASSWORD]
     ports:
       - "3306:3306"
     volumes:
@@ -16,11 +16,11 @@ services:
   flaskapp:
     build: ./python
     environment:
-      SERVER_IP: 116.204.180.51
-      MYSQL_HOST: 116.204.180.51
-      MYSQL_USER: streaming_user
-      MYSQL_DATABASE: streaming
-      MYSQL_PASSWORD: YAM7iqKzodHNJTHRuNsSjHhCDcrWAdrxhOO79B
+      SERVER_IP: [HOST_IP]
+      MYSQL_HOST: [MYSQL_IP]
+      MYSQL_USER: [MYSQL_DEFAULT_USER]
+      MYSQL_DATABASE: [MYSQL_DEFAULT_DB]
+      MYSQL_PASSWORD: [MYSQL_DEFAULT_USER_PASSWORD]
     ports:
       - "8900:8900"
     volumes:
