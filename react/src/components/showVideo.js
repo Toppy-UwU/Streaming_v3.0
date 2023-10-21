@@ -2,33 +2,6 @@ import '../css/video.css'
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-function formatTimeDifference(pastTime) {
-    const currentTime = new Date();
-    const timeDifferenceInSeconds = Math.floor((currentTime - pastTime) / 1000);
-
-    if (timeDifferenceInSeconds < 60) {
-        return 'just now';
-    } else if (timeDifferenceInSeconds < 3600) {
-        const minutes = Math.floor(timeDifferenceInSeconds / 60);
-        return `${minutes} min ago`;
-    } else if (timeDifferenceInSeconds < 86400) {
-        const hours = Math.floor(timeDifferenceInSeconds / 3600);
-        return `${hours} hour ago`;
-    } else if (timeDifferenceInSeconds < 604800) {
-        const days = Math.floor(timeDifferenceInSeconds / 86400);
-        return `${days} day ago`;
-    } else if (timeDifferenceInSeconds < 2419200) {
-        const weeks = Math.floor(timeDifferenceInSeconds / 604800);
-        return `${weeks} week ago`;
-    } else if (timeDifferenceInSeconds < 29030400) {
-        const months = Math.floor(timeDifferenceInSeconds / 2419200);
-        return `${months} month ago`;
-    } else {
-        const years = Math.floor(timeDifferenceInSeconds / 29030400);
-        return `${years} year ago`;
-    }
-}
-
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -77,7 +50,7 @@ function ShowVideos(props) {
                                         <div className='row'>
                                             <div className='col-12'>
                                                 <Link to={'/watch?u=' + video.U_folder + '&v=' + video.V_encode} className='LinkStyle'>
-                                                    <h6>{video.V_view} views • {moment.utc(video.V_upload).format("DD MMM YYYY : HH:mm:ss")}</h6>
+                                                    <h6>{video.V_view} views • {moment(video.V_upload).format("DD MMM YYYY : HH:mm:ss")}</h6>
                                                 </Link>
                                             </div>
                                         </div>

@@ -41,21 +41,18 @@ const UserEditModal = (props) => {
     }
 
     const handleName = (e) => {
-        // console.log(e.target.value);
         setUsername(e.target.value);
         e.preventDefault();
 
     }
 
     const handleMail = (e) => {
-        // console.log(e.target.value);
         setMail(e.target.value);
         e.preventDefault();
 
     }
 
     const handlePermit = (e) => {
-        // console.log(e.target.value);
         setPermit(Number(e.target.value));
     }
 

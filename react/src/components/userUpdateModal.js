@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { getToken } from "./session";
 import '../config';
 import './../css/modal.css'
+import Swal from 'sweetalert2';
+import validator from 'validator';
 
 const UserUpdate = (props) => {
     const session = props.data;
@@ -64,6 +66,22 @@ const UserUpdate = (props) => {
 
     const sendRequest = () => {
         const formData = new FormData();
+        if (username === '' || email === '') {
+            Swal.fire({
+                title: 'Update Fail!',
+                text: 'Please input all fields!',
+                icon: 'error',
+            })
+            return;
+        } else if (validator.isEmail(email) === false){
+            Swal.fire({
+                title: 'Update Fail!',
+                text: 'Please check Email format!',
+                icon: 'error',
+            })
+            return;
+        }
+
         const data = {
             'U_id': session.U_ID,
             'username': username,
@@ -85,7 +103,23 @@ const UserUpdate = (props) => {
         })
             .then((response) => {
                 if (response.ok) {
-                    window.location.reload();
+                    Swal.fire({
+                        title: 'Updated!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        didClose: () => {
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Update error!',
+                        icon: 'error',
+                        didClose: () => {
+                            window.location.reload();
+                        }
+                    })
                 }
             })
             .catch((e) => {
@@ -120,7 +154,7 @@ const UserUpdate = (props) => {
                                             {!flag1 ?
                                                 <img className="UserImg" src={`data:image/jpeg;base64, ${propic}`} alt='Profile' />
                                                 :
-                                                <img className="UserImg" src={propicImg} alt='Profile' />
+                                                <img className="UserImgUp" src={propicImg} alt='Profile' />
                                             }
 
                                         </div>

@@ -61,7 +61,6 @@ const AddUserModal = () => {
             'U_permit': permit,
             'U_type': role,
         }];
-        console.log(u_data)
         fetch(api, {
             method: 'POST',
             headers: {
@@ -85,7 +84,7 @@ const AddUserModal = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Add User failed',
-                text: 'An internal server error or Email is already on the server! Please try again!',
+                text: 'An internal server error or Email is already on the server!',
                 showConfirmButton: true
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -140,7 +139,7 @@ const AddUserModal = () => {
                         </div>
                     </div>
                     <div className="modal-footer d-flex justify-content-center">
-                        <button type="button" className="btn btn-primary" onClick={handleAddUser} data-bs-dismiss="modal">Add</button>
+                        <button type="button" className="btn btn-primary" onClick={handleAddUser} >Add</button>
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>

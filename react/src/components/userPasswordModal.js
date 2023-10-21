@@ -26,16 +26,12 @@ const UpdatePasswordModal = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Please fill all fields',
-                showConfirmButton: false,
-                timer: 1500
             });
             return;
         } else if (validator.isStrongPassword(newPass) === false) {
             Swal.fire({
                 icon: 'error',
                 title: 'Please use strong password format!',
-                showConfirmButton: false,
-                timer: 1500
             });
             return;
         }
@@ -69,10 +65,19 @@ const UpdatePasswordModal = () => {
                                 title: 'Password changed',
                                 icon: 'success',
                                 showConfirmButton: true,
+                                didClose: () => {
+                                    window.location.reload();
+                                }
                             })
-                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                title: 'Password fail!',
+                                text: 'Current password  is incorrect or Server Error!',
+                                icon: 'error',
+                                showConfirmButton: true,
+                            })
                         }
-                    }).catch(() => { })
+                    }).catch(() => {})
                 }
             })
 
@@ -105,16 +110,16 @@ const UpdatePasswordModal = () => {
                                 <label htmlFor="floatingInput">New Password</label>
                             </div>
                             <div className="form-floating mb-2">
-                                <input type="password" className="form-control" placeholder="Confirm New Password" value={confirmNewPass} onChange={handleConfirmNewPassChange} required aria-describedby="passwordHelpBlock"/>
+                                <input type="password" className="form-control" placeholder="Confirm New Password" value={confirmNewPass} onChange={handleConfirmNewPassChange} required aria-describedby="passwordHelpBlock" />
                                 <label htmlFor="floatingInput">Confirm New Password</label>
                                 <div id="passwordHelpBlock" class="form-text">
-                                <i className="bi bi-info-circle-fill"></i> Password must be 8-20 characters long, contain at least  1 upper and lower letters, numbers and special characters.
+                                    <i className="bi bi-info-circle-fill"></i> Password must be 8-20 characters long, contain at least  1 upper and lower letters, numbers and special characters.
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="modal-footer d-flex justify-content-center">
-                        <button type="button" className="btn btn-primary" onClick={handleReset} data-bs-dismiss="modal">Save</button>
+                        <button type="button" className="btn btn-primary" onClick={handleReset} >Save</button>
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { getToken } from "./session";
 import { getAPI } from "./callAPI";
 import '../config';
+import './../css/modal.css'
 import Swal from "sweetalert2";
 
 
@@ -162,7 +163,7 @@ const VideoUpdateModal = (props) => {
                                         {vidTags && vidTags.map((tag, index) => (
                                             <div className="col-auto" key={index}>
                                                 <div className="" style={{ width: 'fit-content', backgroundColor: 'white', borderRadius: '10px', marginTop: "1rem" }}>
-                                                    <div style={{ color: 'black' }}>
+                                                    <div style={{ color: 'black', fontWeight: 'normal', fontSize: '15px', }}>
                                                         &nbsp;{tag.T_name}
                                                         <button onClick={() => removeTag(tag)} className="btn">x</button>
                                                     </div>

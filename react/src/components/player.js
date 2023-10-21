@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import { insertHistories } from './saveHistories';
 import { getUser, isSessionSet } from './session';
+import 'plyr/dist/plyr.css';
+
 
 const VideoPlayer = ({ source, V_id, watchTime }) => {
   const videoRef = useRef(null);
@@ -108,19 +110,20 @@ const VideoPlayer = ({ source, V_id, watchTime }) => {
 
   return (
     <div className='container-fluid' >
-      <div className='row'>
-        <video ref={videoRef} controls style={{ maxHeight: "500px", width: '100%', backgroundColor: 'black'}}>
+      <div className='row' style={{ position: 'relative' }}>
+        <video ref={videoRef} controls style={{ maxHeight: "500px", width: '100%', backgroundColor: 'black' }}>
           Your browser does not support the video tag.
         </video>
+        <div className='d-flex justify-content-end' style={{ position: 'absolute', top: '10px', zIndex: 1 }}>
+          <select className="w-25 form-select" aria-label="Res-select" style={{opacity: '30%'}} onChange={resChange}>
+            <option value={'auto'}>Auto</option>
+            {resolutions && resolutions.map((res, index) => (
+              <option key={index} value={index} >{res.height}p</option>
+            ))}
+          </select>
+        </div>
       </div>
-      <div className='d-flex justify-content-end'>
-        <select className="w-25 form-select" aria-label="Res-select" onChange={resChange}>
-          <option value={'auto'}>Auto</option>
-          {resolutions && resolutions.map((res, index) => (
-            <option key={index} value={index} >{res.height}p</option>
-          ))}
-        </select>
-      </div>
+
     </div>
   );
 };

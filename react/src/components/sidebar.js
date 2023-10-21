@@ -124,10 +124,9 @@ const Sidebar = ({ children }) => {
                   aria-expanded="false"><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' /></Link>
                 <div className="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="triggerId">
                   <div className='UserInfo'>
-                    <Link to={`/profile?profile=${session.U_id}`} className='text-decoration-none text-white'><span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' />{session.username}</span></Link>
+                    <Link to={`/profile?profile=${session.U_id}`} className='text-decoration-none text-white'><span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' />Profile</span></Link>
                   </div>
                   <hr className="dropdown-divider"></hr>
-                  <Link className="dropdown-item" to={`/profile?profile=${session.U_id}`}><span><i className="bi bi-person-circle"></i> Profile</span></Link>
                   <Link className="dropdown-item" to="/"><span><i className="bi bi-house"></i> Home</span></Link>
                   <Link className="dropdown-item" to="/setting"><span><i className="bi bi-person-fill-gear"></i> Setting</span></Link>
                   {session.U_type === 'admin' && (
@@ -147,7 +146,7 @@ const Sidebar = ({ children }) => {
           </div>
           <div className="offcanvas offcanvas-start text-bg-dark" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
             <div className="offcanvas-header">
-              <h5 className="offcanvas-title" id="offcanvasExampleLabel">CS <span>FLIX</span></h5>
+              <h5 className="offcanvas-title" id="offcanvasExampleLabel">CS <span>MSU</span></h5>
               <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body">
