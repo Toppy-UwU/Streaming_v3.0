@@ -133,7 +133,6 @@ const AdminTag = () => {
     };
 
     const handleEditTagDialog = (T_ID, T_name) => {
-        console.log('Edit = '+ T_name + ':id = ' + T_ID);
         Swal.fire({
             title: 'Update Tag',
             input: 'text',
@@ -203,8 +202,8 @@ const AdminTag = () => {
                 })
             } else {
                 Swal.fire(
-                    'Failed to add new tag!',
-                    response.status + ":" + response.statusText,
+                    'Failed!',
+                    'Server Error or Add an existing tag',
                     'error'
                 )
             }

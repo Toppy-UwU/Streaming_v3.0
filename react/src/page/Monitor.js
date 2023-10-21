@@ -34,7 +34,6 @@ const Monitor = () => {
                 <div className='PageTitle'>
                     <h2><i className="bi bi-hdd-stack-fill"></i> Server Monitor</h2>
                 </div>
-                {console.log(serverRes)}
 
                 <div className="Monitor">
                     <div className="showRow1 mb-3">

@@ -29,7 +29,6 @@ const TagPage = () => {
         fetch(api)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 setVideos(data)
             })
         getAPI('tags')
@@ -49,7 +48,7 @@ const TagPage = () => {
                                     All
                                 </button>
                             </div>
-                            {tags && tags.map((tag, index) => (
+                            {tags && tags.slice(0, 15).map((tag, index) => (
                                 <div className='col-auto' key={index} >
                                     <button className='button-tag' onClick={() => changeTag(tag.T_name)}>
                                         {tag.T_name}
@@ -65,6 +64,12 @@ const TagPage = () => {
                         <div className="mt-3">
                             <ShowVideos videos={videos} />
                         </div>
+                        {videos.length === 0 && (
+                            <div className='notfound-vid'>
+                                <i className="bi bi-bookmark-x"></i>
+                                <p>Tag <strong>{tag}</strong> currently has no videos.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </Sidebar>
@@ -73,7 +78,7 @@ const TagPage = () => {
         return (
             <Sidebar>
                 <div className="center">
-                <div className="loading center" />
+                    <div className="loading center" />
                 </div>
             </Sidebar>
         )

@@ -93,7 +93,7 @@ const SearchPage = () => {
                                             <div class="text-section">
                                                 <Link to={'/watch?u=' + video.U_folder + '&v=' + video.V_encode} className="noLink"><h4>{video.V_title}</h4></Link>
                                                 <Link to={`/profile?profile=${video.U_ID}`} className="noLink"><p><span><i className="bi bi-person-fill"></i> </span>{video.U_name}</p></Link>
-                                                <Link to={'/watch?u=' + video.U_folder + '&v=' + video.V_encode} className="noLink"><p><span><i class="bi bi-clock"></i> </span>{moment.utc(video.V_upload).format("DD MMMM YYYY : HH:mm:ss")}</p></Link>
+                                                <Link to={'/watch?u=' + video.U_folder + '&v=' + video.V_encode} className="noLink"><p><span><i class="bi bi-clock"></i> </span>{moment(video.V_upload).format("DD MMMM YYYY : HH:mm:ss")}</p></Link>
                                             </div>
                                         </div>
                                     ))}
@@ -108,7 +108,7 @@ const SearchPage = () => {
                                 <>
                                     <div className={setLoading1 === true || setLoading2 === true ? 'notfound-Search d-none' : 'notfound-Search'}>
                                         <i class="bi bi-exclamation-triangle"></i>
-                                        <p>Your search <b>" {search} "</b> was not found.</p>
+                                        <p>Your search <strong>{search}</strong> was not found.</p>
                                         <Link to="/"><button type="button" class="btn btn-outline-primary">Back to Home</button></Link>
                                     </div>
                                 </>

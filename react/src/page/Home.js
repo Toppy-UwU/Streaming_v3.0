@@ -42,7 +42,7 @@ const Home = () => {
         <div className='container-fluid'>
           <div className='tagBarHome mb-4 mt-3 mx-4'>
             <div className='row'>
-              {tags && tags.map((tag, index) => (
+              {tags && tags.slice(0, 15).map((tag, index) => (
                 <div className='col-auto mt-2' key={index}>
                   <button className='button-tag' onClick={() => changeTag(tag.T_name)}>
                     {tag.T_name}

@@ -92,7 +92,6 @@ const UploadPage = () => {
         const tmpFile = e.target.files[0];
         if (tmpFile) {
             setFile(tmpFile);
-            console.log(tmpFile);
             setTmp(tmpFile.name);
             setVideoUrl(URL.createObjectURL(tmpFile));
             setVideoKey(videoKey + 1);

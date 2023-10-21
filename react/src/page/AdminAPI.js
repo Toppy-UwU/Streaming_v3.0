@@ -79,9 +79,10 @@ const AdminAPI = () => {
             name: 'Expired Date',
             selector: row => row.url_expire,
             cell: (row) => (
-                moment.utc(row.url_expire).format("DD MMMM YYYY : HH:mm:ss")
+                moment(row.url_expire).format("DD MMMM YYYY : HH:mm:ss")
             ),
-            hide: Media.MD
+            hide: Media.MD,
+            sortable: true,
         },
         {
             name: 'Copy URL',

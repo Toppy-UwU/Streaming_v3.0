@@ -87,17 +87,18 @@ const LoginPage = () => {
             });
           }
         } else {
-          console.log('Login failed');
+          Swal.fire({
+            icon: 'error',
+            title: 'Login Fail!',
+            text: 'Please correctly enter email and password!',
+            footer: '<a href="/register">Register?</a>',
+            showCancelButton: false,
+            confirmButtonText: 'OK',
+          });
         }
       } catch (error) {
         console.error('Error:', error);
       }
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        text: 'Please correctly enter email and password!',
-        footer: '<a href="/register">Register?</a>',
-      });
     }
   };
 
@@ -136,7 +137,7 @@ const LoginPage = () => {
                     </div>
 
                     <div className="form-floating mb-4">
-                      <input type={showPass? 'text':'password'} id="passwordInput" className="form-control form-control-lg" placeholder="Password" onChange={handlePasswordChange} required />
+                      <input type={showPass ? 'text' : 'password'} id="passwordInput" className="form-control form-control-lg" placeholder="Password" onChange={handlePasswordChange} required />
                       <label for="passwordInput">Password</label>
                     </div>
 
@@ -147,8 +148,8 @@ const LoginPage = () => {
                           <label className="form-check-label" id="RemMe" htmlFor="chackBox"><span className='text-white'>&nbsp;Remember Me</span></label>
                         </div>
                         <div className="ShowPassbox">
-                          <i className={showPass? "bi bi-eye-slash-fill text-white":"bi bi-eye-fill text-white"} onClick={handleShowPass}></i>
-                          <label className="form-check-label" id="showPassLogin" htmlFor="chackBox" onClick={handleShowPass}><span className='text-white'>&nbsp;Show Password</span></label>
+                          <i className={showPass ? "bi bi-eye-slash-fill text-white" : "bi bi-eye-fill text-white"} onClick={handleShowPass}></i>
+                          <label className="form-check-label" id="showPassLogin" htmlFor="chackBox" onClick={handleShowPass}><span className='text-white'>&nbsp;{showPass ? "Hide" : "Show"}</span></label>
                         </div>
                       </div>
                     </div>

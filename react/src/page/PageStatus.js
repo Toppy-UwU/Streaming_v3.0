@@ -28,10 +28,10 @@ const VideoStatusPage = () => {
     };
 
     useEffect(() => {
-        
+
         fetchData();
 
-        const interval = setInterval(fetchData, 10000); // Fetch data every 10 seconds
+        const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
 
         return () => clearInterval(interval);
     }, [gatUploadApi]); // Add dependency to useEffect
@@ -65,12 +65,12 @@ const VideoStatusPage = () => {
             },
             body: JSON.stringify(data)
         }).then((response) => {
-            if(response.ok){
+            if (response.ok) {
                 Swal.fire({
                     title: "Cancled",
                     icon: "success",
                     showConfirmButton: false,
-                    timer:2000,
+                    timer: 2000,
                     didClose: () => {
                         fetchData();
                     }
@@ -78,7 +78,7 @@ const VideoStatusPage = () => {
             }
         })
 
-        
+
     }
 
     const columns = [

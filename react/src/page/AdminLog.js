@@ -29,7 +29,6 @@ const AdminLog = () => {
 
         fetchData();
     }, []);
-    console.log(logs);
 
     useEffect(() => {
         const result = logs.filter((item) => {

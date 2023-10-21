@@ -14,6 +14,7 @@ import '../css/watch.css'
 import '../css/swal2theme.css'
 import Swal from 'sweetalert2';
 import '../config';
+import copy from 'copy-to-clipboard';
 
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -26,33 +27,6 @@ function formatTime(seconds) {
     }
     formattedTime += `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     return formattedTime;
-}
-
-function formatTimeDifference(pastTime) {
-    const currentTime = new Date();
-    const timeDifferenceInSeconds = Math.floor((currentTime - pastTime) / 1000);
-
-    if (timeDifferenceInSeconds < 60) {
-        return 'just now';
-    } else if (timeDifferenceInSeconds < 3600) {
-        const minutes = Math.floor(timeDifferenceInSeconds / 60);
-        return `${minutes} min ago`;
-    } else if (timeDifferenceInSeconds < 86400) {
-        const hours = Math.floor(timeDifferenceInSeconds / 3600);
-        return `${hours} hour ago`;
-    } else if (timeDifferenceInSeconds < 604800) {
-        const days = Math.floor(timeDifferenceInSeconds / 86400);
-        return `${days} day ago`;
-    } else if (timeDifferenceInSeconds < 2419200) {
-        const weeks = Math.floor(timeDifferenceInSeconds / 604800);
-        return `${weeks} week ago`;
-    } else if (timeDifferenceInSeconds < 29030400) {
-        const months = Math.floor(timeDifferenceInSeconds / 2419200);
-        return `${months} month ago`;
-    } else {
-        const years = Math.floor(timeDifferenceInSeconds / 29030400);
-        return `${years} year ago`;
-    }
 }
 
 const WatchPage = () => {
@@ -146,7 +120,7 @@ const WatchPage = () => {
         const downloadAPI = ip + '/download?u=' + vidDetail.U_folder + '&v=' + vidDetail.V_encode;
         Swal.fire({
             title: 'Download',
-            text: 'Click Download to start convert',
+            text: 'Do not exit this page when downloading!',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Download',
@@ -181,8 +155,7 @@ const WatchPage = () => {
                 if (result.isConfirmed) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Converted!',
-                        text: 'The video has been successfully converted.',
+                        title: 'Downloaded!',
                         showConfirmButton: false,
                         timer: 2500,
                         timerProgressBar: true
@@ -192,6 +165,7 @@ const WatchPage = () => {
                 }
             });
     }
+
 
     const deleteDownload = () => {
         fetch((ip + '/delete/download?u=' + vidDetail.U_folder + '&v=' + vidDetail.V_encode), {
@@ -209,18 +183,13 @@ const WatchPage = () => {
             showCancelButton: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                navigator.clipboard.writeText(value)
-                    .then(() => {
-                        Swal.fire({
-                            title: 'Copied!',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Unable to copy: ', error);
-                    });
+                copy(value);
+                Swal.fire({
+                    title: 'Copied!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
         });
     }
@@ -233,19 +202,14 @@ const WatchPage = () => {
             showCancelButton: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                navigator.clipboard.writeText(url)
-                    .then(() => {
-                        Swal.fire({
-                            title: 'Copied!',
-                            text: 'API has been copied to the clipboard.',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Unable to copy: ', error);
-                    });
+                copy(url);
+                Swal.fire({
+                    title: 'Copied!',
+                    text: 'API has been copied to the clipboard.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
         });
     }
@@ -310,12 +274,7 @@ const WatchPage = () => {
                             <>
                                 <div className='play-video'>
                                     <VideoPlayer source={url} V_id={vidDetail.V_ID} watchTime={vidDetail.watchTime} />
-                                    <div className='tags'>
-                                        {vidDetail.tags.map((tag, index) => (
-                                            <Link to={"/tag?tag=" + tag.T_name}>#{tag.T_name}</Link>
-                                        ))}
-                                    </div>
-                                    <h6>{vidDetail.V_title}</h6>
+                                    <h6 className='watchTitle mt-4'>{vidDetail.V_title}</h6>
                                     <div className='owner-info'>
                                         <Link to={`/profile?profile=${vidDetail.U_ID}`}><img src={`data:image/jpeg;base64, ${vidDetail.U_pro_pic}`} alt='profile' /></Link>
                                         <Link to={`/profile?profile=${vidDetail.U_ID}`} className='none-link'><p>{vidDetail.U_name}</p></Link>
@@ -344,13 +303,17 @@ const WatchPage = () => {
                                     <div className='vid-info'>
                                         <div className="card">
                                             <div className="card-body">
-                                                <p className="card-title">{vidDetail.V_view} Views &bull; {moment.utc(vidDetail.V_upload).format("DD MMMM YYYY : HH:mm:ss")}&nbsp;
-                                                    {vidDetail.tags.map((tag) => (
-                                                        <Link to={"/tag?tag=" + tag.T_name} className='none-link'>#{tag.T_name}&nbsp;</Link>
-                                                    ))}</p>
+                                                <p className="card-title"><i className="bi bi-play-fill"></i> {vidDetail.V_view} Views &bull; <i className="bi bi-clock-fill"></i> {moment(vidDetail.V_upload).format("DD MMMM YYYY : HH:mm:ss")} &bull;
+                                                    {vidDetail.tags.length > 0 && (
+                                                        <p className="card-title"><i className="bi bi-bookmark-fill"></i> Tags :&nbsp;
+                                                            {vidDetail.tags.map((tag) => (
+                                                                <Link to={"/tag?tag=" + tag.T_name} className='none-link'>#{tag.T_name}&nbsp;</Link>
+                                                            ))}
+                                                        </p>
+                                                    )}
+                                                </p>
                                                 {vidDetail.V_desc.length !== 0 ? (
                                                     <>
-                                                        {console.log(vidDetail.V_desc.length)}
                                                         <p className={showDesc ? 'card-textopen' : 'card-text'}>{vidDetail.V_desc}</p>
                                                         {vidDetail.V_desc.length >= 80 &&
                                                             <>
@@ -381,7 +344,7 @@ const WatchPage = () => {
                                                 </div>
                                                 <div className='suggest-info'>
                                                     <h4>{video.V_title}</h4>
-                                                    <p>{video.U_name} <br /> {video.V_view} Views &bull; {moment.utc(video.V_upload).format("DD MMM YYYY : HH:mm")}</p>
+                                                    <p>{video.U_name} <br /> {video.V_view} Views &bull; {moment(video.V_upload).format("DD MMM YYYY : HH:mm")}</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -390,6 +353,7 @@ const WatchPage = () => {
                             </>
                         ) : (
                             <div className='notfound-vid'>
+                                {document.title = "Video not found!"}
                                 <i className="bi bi-camera-video-off"></i>
                                 <p>This video is unavailable or private.</p>
                                 <Link to="/"><button type="button" className="btn btn-outline-primary">Back to Home</button></Link>

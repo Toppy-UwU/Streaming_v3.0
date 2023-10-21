@@ -14,6 +14,7 @@ const HistoryPage = () => {
     const user = getUser();
     const api = ip + '/get/histories?u=' + user;
     const token = getToken();
+    const [chk, setChk] = useState(false);
 
     const clearApi = ip + '/delete/histories';
     document.title = "History";
@@ -31,6 +32,8 @@ const HistoryPage = () => {
             }
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setChk(true);
         }
     }
 
@@ -125,12 +128,14 @@ const HistoryPage = () => {
                     <div className='PageTitle'>
                         <h2><i className="bi bi-clock-history"></i> Watch History</h2>
                     </div>
-                    <div className="d-flex justify-content-center align-items-center">
-                        <div className='notfound-vid'>
-                            <i className="bi bi-x-circle"></i>
-                            <p>No watch history</p>
+                    {chk === true && (
+                        <div className="d-flex justify-content-center align-items-center">
+                            <div className='notfound-vid'>
+                                <i className="bi bi-x-circle"></i>
+                                <p>No watch history</p>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </Sidebar>
         )

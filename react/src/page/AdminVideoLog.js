@@ -27,7 +27,6 @@ const AdminVideoLog = () => {
 
     useEffect(() => {
         const result = logs.filter((item) => {
-            console.log(item)
             const lowerCaseSearch = search.toLowerCase();
             return item.U_name.toLowerCase().includes(lowerCaseSearch) ||
                 item.V_title.toLowerCase().includes(lowerCaseSearch);

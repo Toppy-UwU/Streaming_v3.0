@@ -24,7 +24,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
     if ((formData.password !== formData.con_password) ||
       (validator.isStrongPassword(formData.password) === false && validator.isStrongPassword(formData.con_password) === false) || validator.isEmail(formData.email) === false) {
       if (formData.password !== formData.con_password) {

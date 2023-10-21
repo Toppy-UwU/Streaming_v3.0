@@ -20,7 +20,6 @@ const VideosListPage = () => {
     const fetchData = async () => {
         try {
             const response = await getAPI('uploadLog');
-            console.log(response);
             setVideo(response);
             setFilter(response);
         } catch (error) {

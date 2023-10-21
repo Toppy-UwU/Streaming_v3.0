@@ -195,7 +195,6 @@ const UserVideos = () => {
     },
   }, 'dark');
 
-  if (videos.length > 0) {
     return (
       <div>
         <Sidebar>
@@ -233,23 +232,6 @@ const UserVideos = () => {
         </Sidebar>
       </div>
     );
-  } else {
-    return (
-      <div>
-        <Sidebar>
-          <div className='container-fluid'>
-            <br />
-            <div className='PageTitle'>
-              <h2><i className="bi bi-collection-play-fill"></i> {session.username} Videos</h2>
-            </div>
-            <div className='user-table'>
-              <p>No videos found.</p>
-            </div>
-          </div>
-        </Sidebar>
-      </div>
-    );
-  }
 };
 
 export default UserVideos;
