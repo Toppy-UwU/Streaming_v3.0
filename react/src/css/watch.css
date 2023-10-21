@@ -219,6 +219,14 @@
     color: white;
     font-size: 20px;
 }
+.play-video .watchTitle {
+    font-size: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width : 1000px) {
     .suggest-info h4 {

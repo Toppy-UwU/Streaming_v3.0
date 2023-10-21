@@ -40,6 +40,16 @@
     margin-right: 10px;
 }
 
+.ProfileUsername {
+    color: white;
+    font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .nav.d-flex {
     display: flex;
     flex-wrap: nowrap;
@@ -52,7 +62,8 @@
         height: 150px;
         margin-top: -50px;
     }
-    .textTitle span{
+
+    .textTitle span {
         display: none;
     }
 }

@@ -18,6 +18,12 @@
     width: 150px;
 }
 
+.UpdatePicImg .UserImgUp {
+    border-radius: 60%;
+    width: 180px;
+    height: 150px;
+}
+
 .TagButtonModal {
     color: white;
     font-size: 12px;
@@ -35,6 +41,12 @@
 }
 
 .UserSection input {
+    font-size: 16px;
+}
+
+.showTagsinModal {
+    color: black;
+    font-weight: normal;
     font-size: 16px;
 }
 

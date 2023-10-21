@@ -41,8 +41,9 @@ element {
   min-width: 50%; /* Set the minimum width to 50% of its container's width */
   min-height: 10rem; /* Set the minimum height to 10 rems */
 }
+
 :root {
-     iframe#webpack-dev-server-client-overlay {
-          display: none !important
-     }
+  iframe#webpack-dev-server-client-overlay {
+       display: none !important
+  }
 }
