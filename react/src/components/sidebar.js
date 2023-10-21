@@ -103,7 +103,7 @@ const Sidebar = ({ children }) => {
               <i id="navbtn" className="bi bi-list" aria-hidden="true"></i>
             </Link>
           </div>
-          <Link to="/" className='link'><div className='title ml-auto' style={{ display: searchBox ? "none" : "" }}>CS <span>MSU</span></div></Link>
+          <a href="/" className='link'><div className='title ml-auto' style={{ display: searchBox ? "none" : "" }}>CS <span>MSU</span></div></a>
           <form className='searchBox' style={{ display: searchBox ? "flex" : "", width: searchBox ? "calc(90% - 10%)" : "" }} onSubmit={Search}>
             <input type='text' placeholder='Search..' defaultValue={''} onChange={handleSearch} />
             <button onClick={Search} className='searchbtn'><i className="bi bi-search"></i></button>
@@ -228,7 +228,7 @@ const Sidebar = ({ children }) => {
                   </li>
 
                   <li className="nav-item">
-                    <Link className="nav-link active" to="/register"><i className="bi bi-house"></i><span> Register</span></Link>
+                    <Link className="nav-link active" to="/register"><i className="bi bi-person-add"></i><span> Register</span></Link>
                   </li>
 
                 </ul>
