@@ -86,7 +86,7 @@ const AdminSidebar = ({ children }) => {
               <i id="navbtn" className="bi bi-list" aria-hidden="true"></i>
             </Link>
           </div>
-          <Link to="/admin" className='link'><div className='title ml-auto' style={{ display: searchBox ? "none" : "" }}>CS <span>Admin</span></div></Link>
+          <a href="/admin" className='link'><div className='title ml-auto' style={{ display: searchBox ? "none" : "" }}>CS <span>Admin</span></div></a>
           <form className='searchBox' style={{ display: searchBox ? "flex" : "", width: searchBox ? "calc(90% - 10%)" : "" }} onSubmit={Search}>
             <input type='text' placeholder='Search..' defaultValue={''} onChange={handleSearch} />
             <button onClick={Search} className='searchbtn'><i className="bi bi-search"></i></button>
