@@ -103,10 +103,9 @@ const AdminSidebar = ({ children }) => {
                 aria-expanded="false"><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' /></Link>
               <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="triggerId">
                 <div className='UserInfo'>
-                  <span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' /> {session.username}</span>
+                  <span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' /> Profile</span>
                 </div>
                 <hr class="dropdown-divider"></hr>
-                <Link class="dropdown-item" to={`/profile?profile=${session.U_id}`}><span><i className="bi bi-person-circle"></i> Profile</span></Link>
                 <Link class="dropdown-item" to="/"><span><i className="bi bi-house"></i> Home</span></Link>
                 <hr class="dropdown-divider"></hr>
                 <Link class="dropdown-item" to="/setting"><span><i className="bi bi-person-fill-gear"></i> Setting</span></Link>
