@@ -4,7 +4,11 @@ FROM python
 # Set the working directory in the container
 WORKDIR /app
 
-RUN mkdir -p /app/python
+RUN mkdir -p ../upload
+
+RUN mkdir -p ../output
+
+RUN mkdir -p ../key
 
 # Install system dependencies including libgl1-mesa-glx
 RUN apt-get update && apt-get install -y ffmpeg libgl1-mesa-glx
@@ -22,7 +26,7 @@ EXPOSE 80
 ENV NAME World
 
 # Copy the current directory contents into the container at /app
-COPY . /app/python
+COPY . /app
 
 # Run app.py when the container launches
 CMD ["python", "./main_flask.py"]
