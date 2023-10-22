@@ -12,6 +12,7 @@ const VideoUpdateModal = (props) => {
     const [permit, setPermit] = useState(props.permit);
     const [tags, setTags] = useState(null);
     const [vidTags, setVidTags] = useState(props.tags);
+    const [showTags, setShowTags] = useState(null);
     const [flag, setFlag] = useState(false);
     const ip = global.config.ip.ip;
 
@@ -21,8 +22,9 @@ const VideoUpdateModal = (props) => {
         getAPI('tags')
             .then(response => {
                 const removeID = vidTags.map(tmp => tmp.T_ID);
-                const tmp_tag = response.filter(tag => !removeID.includes(tag.T_ID));
-                setTags(tmp_tag)
+                const tmp_show_tag = response.filter(tag => !removeID.includes(tag.T_ID));
+                setTags(response);
+                setShowTags(tmp_show_tag);
             });
     }, [])
 
@@ -96,18 +98,20 @@ const VideoUpdateModal = (props) => {
 
     const handleTag = (tag) => {
         const tmp_vidTags = [...vidTags];
-        const tmp_tags = tags.filter(tmp_tag => tmp_tag !== tag);
+        const tmp_tags = showTags.filter(tmp_tag => tmp_tag !== tag);
         tmp_vidTags.push(tag);
         setVidTags(tmp_vidTags);
-        setTags(tmp_tags);
+        setShowTags(tmp_tags);
     }
 
     const removeTag = (tag) => {
         const tmp_vidTags = vidTags.filter(tmp_tag => tmp_tag !== tag);
-        const tmp_tags = [...tags];
+        const tmp_tags = [...showTags];
         tmp_tags.push(tag);
+        const tmp = tmp_tags.map(tmp => tmp.T_ID);
+        const show = tags.filter(tag => tmp.includes(tag.T_ID));
         setVidTags(tmp_vidTags);
-        setTags(tmp_tags);
+        setShowTags(show);
     }
 
     const searchTag = (e) => {
@@ -115,7 +119,7 @@ const VideoUpdateModal = (props) => {
         if (e.target.value === '') {
             const removeID = vidTags.map(tmp => tmp.T_ID);
             const tmp_tag = tags.filter(tag => !removeID.includes(tag.T_ID))
-            setTags(tmp_tag);
+            setShowTags(tmp_tag);
         } else {
             const input = e.target.value;
             const tmp_tags = vidTags.map(tmp => tmp.T_ID);
@@ -123,7 +127,7 @@ const VideoUpdateModal = (props) => {
             const tmp = show.filter(tag =>
                 tag.T_name.toLowerCase().includes(input.toLowerCase())
             );
-            setTags(tmp);
+            setShowTags(tmp);
         }
     };
 
@@ -178,7 +182,7 @@ const VideoUpdateModal = (props) => {
                                                         <div className="col input-group">
                                                             <input type="text" className="form-control" placeholder="search tag" onChange={searchTag} defaultValue={''} />
                                                         </div>
-                                                        {tags && tags.slice(0, 5).map((d_tag, index) => (
+                                                        {showTags && showTags.slice(0, 5).map((d_tag, index) => (
                                                             <button key={index} className='dropdown-item' onClick={() => handleTag(d_tag)}>+ {d_tag.T_name}</button>
                                                         ))}
                                                     </div>
