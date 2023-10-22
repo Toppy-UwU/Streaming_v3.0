@@ -124,7 +124,7 @@ const Sidebar = ({ children }) => {
                   aria-expanded="false"><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' /></Link>
                 <div className="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="triggerId">
                   <div className='UserInfo'>
-                    <Link to={`/profile?profile=${session.U_id}`} className='text-decoration-none text-white'><span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' />Profile</span></Link>
+                    <a href={`/profile?profile=${session.U_id}`} className='text-decoration-none text-white'><span><img src={`data:image/jpeg;base64, ${session.U_pro_pic}`} alt="profile" className='user-icon' />Profile</span></a>
                   </div>
                   <hr className="dropdown-divider"></hr>
                   <Link className="dropdown-item" to="/"><span><i className="bi bi-house"></i> Home</span></Link>
