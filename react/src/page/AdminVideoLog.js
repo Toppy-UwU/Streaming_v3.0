@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import DataTable, { createTheme} from "react-data-table-component";
+import DataTable, { createTheme, Media} from "react-data-table-component";
 import AdminSidebar from "../components/AdminSidebar";
 import { getAPI } from '../components/callAPI';
 import '../config'
 import "../css/admin.css"
+import moment from "moment";
 
 const AdminVideoLog = () => {
     const [logs, setLogs] = useState([]);
@@ -39,6 +40,7 @@ const AdminVideoLog = () => {
         {
             name: 'Videos',
             selector: row => <img height={120} width={160} src={`data:image/jpeg;base64, ${row.V_pic}`} alt={row.V_title+" Cover"}/>,
+            hide: Media.MD
         },
         {
             name: 'Title',
@@ -52,6 +54,7 @@ const AdminVideoLog = () => {
         {
             name: 'Date',
             selector: row => row.V_upload,
+            cell : (row) => moment(row.V_upload).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
 
