@@ -215,7 +215,7 @@ const UploadPage = () => {
                         let tmp = Math.round(progress * 100)
                         setUpProgress(tmp.toString());
                         if (tmp === 100.0 || tmp === 100) {
-                            console.log('done upload');
+                            // console.log('done upload');
                         }
                     },
                 })
@@ -233,7 +233,7 @@ const UploadPage = () => {
                     })
 
                     .catch((error) => {
-                        console.error('Upload failed:', error);
+                        // console.error('Upload failed:', error);
                     });
             });
 
