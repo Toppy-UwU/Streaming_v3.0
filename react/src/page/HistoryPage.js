@@ -111,7 +111,7 @@ const HistoryPage = () => {
                                 <div class="history-text">
                                     <Link to={'/watch?u=' + history.U_folder + '&v=' + history.V_encode} className="noLink"><h4>{history.V_title}</h4></Link>
                                     <Link to={`/profile?profile=${history.U_ID}`} className="noLink"><p><span><i className="bi bi-person-fill"></i> </span>{history.U_name}</p></Link>
-                                    <Link to={'/watch?u=' + history.U_folder + '&v=' + history.V_encode} className="noLink"><p><span><i class="bi bi-clock"></i> </span>{moment.utc(history.H_watchDate).format("DD MMMM YYYY : HH:mm:ss")}</p></Link>
+                                    <Link to={'/watch?u=' + history.U_folder + '&v=' + history.V_encode} className="noLink"><p><span><i class="bi bi-clock"></i> </span>{moment(history.H_watchDate).format("DD MMMM YYYY : HH:mm:ss")}</p></Link>
                                 </div>
                             </div>
                         ))}
