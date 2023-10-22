@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import './../css/login.css';
 import '../config';
 import validator from 'validator';
+import { isSessionSet } from '../components/session';
 
 const RegisterPage = () => {
   const ip = global.config.ip.ip;
@@ -79,6 +80,10 @@ const RegisterPage = () => {
     }
   }
 
+  if (isSessionSet('isLoggedIn')) {
+    window.location.href = '/';
+  }
+  
   return (
     <div className="container-fluid background-container py-3">
       <div className="row d-flex justify-content-center align-items-center">
