@@ -54,7 +54,7 @@ const AdminVideoLog = () => {
         {
             name: 'Date',
             selector: row => row.V_upload,
-            cell : (row) => moment(row.V_upload).format("DD MMMM YYYY : HH:mm:ss"),
+            cell : (row) => moment.utc(row.V_upload).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
 
