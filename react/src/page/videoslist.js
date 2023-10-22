@@ -91,7 +91,7 @@ const VideosListPage = () => {
         {
             name: 'Videos',
             selector: row => <Link className="dropdown-item" to={'/watch?u=' + row.U_folder + '&v=' + row.V_encode}> <img height={120} width={160} src={`data:image/jpeg;base64, ${row.V_pic}`} alt={row.V_title + " Picture"} /> </Link>,
-            hide: Media.SM
+            hide: Media.MD
         },
         {
             name: 'Title',
@@ -100,19 +100,21 @@ const VideosListPage = () => {
         {
             name: 'Owner',
             selector: row => row.U_name,
-            sortable: true
+            sortable: true,
+            hide: Media.SM
         },
         {
             name: 'Permit',
             selector: row => row.V_permit,
             cell: (row) => (row.V_permit.toUpperCase()),
-            sortable: true
+            sortable: true,
+            hide: Media.MD
         },
         {
             name: 'Date',
             selector: row => <span>{moment.utc(row.V_upload).format("DD MMMM YYYY")}</span>,
             sortable: true,
-            hide: Media.SM
+            hide: Media.MD
         },
         {
             name: 'Action',
