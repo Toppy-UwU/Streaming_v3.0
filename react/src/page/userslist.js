@@ -114,14 +114,14 @@ const UserListPage = () => {
             name: 'E-mail',
             selector: row => row.U_mail,
             sortable: true,
-            hide: Media.SM
+            hide: Media.MD
         },
         {
             name: 'Upload Permit',
             selector: row => row.U_permit,
             sortable: true,
             cell: (row) => (row.U_permit === 1 ? "Yes" : "No"),
-            hide: Media.SM
+            hide: Media.MD
         },
         {
             name: 'Role',
