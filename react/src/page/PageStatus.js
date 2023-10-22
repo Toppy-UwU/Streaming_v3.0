@@ -143,36 +143,40 @@ const VideoStatusPage = () => {
         },
     }, 'dark');
 
-    return (
-        <div>
-            <Sidebar>
-                <div className="container-fluid">
-                    <br />
-                    <div className='PageTitle'>
-                        <h2><i className="bi bi-cloud-upload-fill"></i> Uploading Status</h2>
-                    </div>
-
-                    <div className='user-table'>
-                        <div className="card">
-                            <div className="card-body">
-                                <DataTable
-                                    customStyles={tableHeaderStyle}
-                                    columns={columns}
-                                    data={uploading}
-                                    pagination
-                                    fixedHeader
-                                    highlightOnHover
-                                    theme="solarized"
-                                ></DataTable>
-                            </div>
-                        </div>
+    if (session.U_permit === 0) {
+        window.location.href = '/';
+    } else {
+        return (
+            <div>
+                <Sidebar>
+                    <div className="container-fluid">
                         <br />
-                    </div>
+                        <div className='PageTitle'>
+                            <h2><i className="bi bi-cloud-upload-fill"></i> Uploading Status</h2>
+                        </div>
 
-                </div>
-            </Sidebar>
-        </div>
-    );
+                        <div className='user-table'>
+                            <div className="card">
+                                <div className="card-body">
+                                    <DataTable
+                                        customStyles={tableHeaderStyle}
+                                        columns={columns}
+                                        data={uploading}
+                                        pagination
+                                        fixedHeader
+                                        highlightOnHover
+                                        theme="solarized"
+                                    ></DataTable>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+
+                    </div>
+                </Sidebar>
+            </div>
+        );
+    }
 };
 
 export default VideoStatusPage;
