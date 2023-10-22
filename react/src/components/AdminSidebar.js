@@ -5,11 +5,13 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './../css/sidebar.css';
 import './../css/swal2theme.css';
 import Swal from 'sweetalert2';
+import '../config';
 
 const AdminSidebar = ({ children }) => {
   const [search, setSearch] = useState('');
   const [searchBox, setSearchBox] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const ip = global.config.ip.ip;
 
   const toggleSearchBox = () => {
     setSearchBox(!searchBox);
