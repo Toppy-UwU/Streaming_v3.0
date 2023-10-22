@@ -3,6 +3,7 @@ import Sidebar from "../components/sidebar";
 import DataTable, { createTheme, Media } from "react-data-table-component";
 import './../config';
 import { getlocalData } from './../components/session';
+import moment from "moment";
 
 const UserLog = () => {
     const [log, setLog] = useState([]);
@@ -53,6 +54,7 @@ const UserLog = () => {
         {
             name: 'Timestamp',
             selector: row => row.created_at,
+            cell : (row) => moment.utc(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
     ]
