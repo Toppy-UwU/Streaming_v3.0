@@ -178,18 +178,19 @@ const Sidebar = ({ children }) => {
                       <Link className="nav-link active" to="/history"><i className="bi bi-clock-history"></i><span> History</span></Link>
                     </li>
 
-                    <hr className='text-secondary d-md-block' />
-
                     {session.U_permit === 1 && (
-                      <li className="nav-item">
-                        <Link className="nav-link active" to="/upload"><i className="bi bi-cloud-upload"></i><span> Upload</span></Link>
-                      </li>
-                    )}
+                      <>
 
-                    {session.U_permit === 1 && (
-                      <li className="nav-item">
-                        <Link className="nav-link active" to="/videosStatus"><i className="bi bi-list-ul"></i><span> Upload Status</span></Link>
-                      </li>
+                        <hr className='text-secondary d-md-block' />
+
+                        <li className="nav-item">
+                          <Link className="nav-link active" to="/upload"><i className="bi bi-cloud-upload"></i><span> Upload</span></Link>
+                        </li>
+
+                        <li className="nav-item">
+                          <Link className="nav-link active" to="/videosStatus"><i className="bi bi-list-ul"></i><span> Upload Status</span></Link>
+                        </li>
+                      </>
                     )}
 
                     <hr className='text-secondary d-md-block' />
