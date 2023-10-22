@@ -54,7 +54,7 @@ const AdminLog = () => {
         {
             name: 'Timestamp',
             selector: row => row.created_at,
-            cell : (row) => moment(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
+            cell : (row) => moment.utc(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
 
