@@ -56,13 +56,27 @@ const AdminSidebar = ({ children }) => {
       confirmButtonText: 'Yes'
     }).then((result) => {
       if (result.isConfirmed) {
+        const tmp = {
+          'U_id': session.U_id,
+          'action': 'logout',
+        }
+        fetch(ip + '/insert/log', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(tmp)
+        }).catch(error => { });
         Swal.fire({
           title: 'Logout Completed!',
-          icon: 'success'
-        }).then(() => {
-          localStorage.clear();
-          window.location.href = '/'
-        });
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000,
+          didClose: () => {
+            localStorage.clear();
+            window.location.href = '/'
+          }
+        })
       }
     })
   }
