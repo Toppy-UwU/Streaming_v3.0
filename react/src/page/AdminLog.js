@@ -3,6 +3,7 @@ import DataTable, { createTheme } from "react-data-table-component";
 import AdminSidebar from "../components/AdminSidebar";
 import '../config'
 import "../css/admin.css"
+import moment from "moment";
 
 const AdminLog = () => {
     const [logs, setLogs] = useState([]);
@@ -53,6 +54,7 @@ const AdminLog = () => {
         {
             name: 'Timestamp',
             selector: row => row.created_at,
+            cell : (row) => moment(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
 
