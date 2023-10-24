@@ -217,7 +217,7 @@ def create_app(test_config=None):
             conn = create_conn()
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE users SET U_storage = %s WHERE U_folder = %s", (size, vidData.get("path"))
+                "UPDATE users SET U_storage = %s, U_update = %s WHERE U_folder = %s", (size, 1, vidData.get("path"))
             )
             conn.commit()
             cursor.close()
@@ -1468,7 +1468,7 @@ def create_app(test_config=None):
                         size = round(size / (1048576))  # bytes to mb
 
                         cursor.execute(
-                            "UPDATE users SET U_storage = %s WHERE U_folder = %s", (size, data["U_folder"])
+                            "UPDATE users SET U_storage = %s, U_update = %s WHERE U_folder = %s", (size, 1, data["U_folder"])
                         )
                         conn.commit()
                         cursor.close()
