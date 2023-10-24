@@ -111,7 +111,7 @@ const VideoPlayer = ({ source, V_id, watchTime }) => {
   return (
     <div className='container-fluid' >
       <div className='row' style={{ position: 'relative' }}>
-        <video ref={videoRef} controls style={{ maxHeight: "400px", width: '100%', backgroundColor: 'black' }}>
+        <video ref={videoRef} controls style={{ maxHeight: "460px", width: '100%', backgroundColor: 'black' }}>
           Your browser does not support the video tag.
         </video>
         <div className='d-flex justify-content-end' style={{ position: 'absolute', top: '10px', zIndex: 1 }}>
