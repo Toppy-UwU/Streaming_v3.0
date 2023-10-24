@@ -35,7 +35,6 @@ server_ip = os.getenv("SERVER_IP", "localhost")
 
 ipf = 'http://' + server_ip + ':8900' #flask
 ipw = 'http://' + server_ip + ':80' #web
-ips = 'http://' + server_ip + ':80' #server
 
 
 def size(B):
@@ -151,11 +150,12 @@ def create_app(test_config=None):
                 ),
             )
 
-            for tag in data.get("tags"):
-                cursor.execute(
-                    "INSERT INTO tag_video (V_ID, T_ID) VALUES ((SELECT V_ID FROM videos WHERE V_encode = %s ), %s) ",
-                    (data.get("encode"), tag["T_ID"]),
-                )
+            if data.get("tags") is not None:
+                for tag in data.get("tags"):
+                    cursor.execute(
+                        "INSERT INTO tag_video (V_ID, T_ID) VALUES ((SELECT V_ID FROM videos WHERE V_encode = %s ), %s) ",
+                        (data.get("encode"), tag["T_ID"]),
+                    )
 
             conn.commit()
             cursor.close()
@@ -175,7 +175,7 @@ def create_app(test_config=None):
             ):
                 b64 = getThumbnail(path)
                 vidData["videoThumbnail"] = b64
-
+            
             video = ffmpeg_streaming.input(path)
             # print(video)
 
@@ -183,11 +183,10 @@ def create_app(test_config=None):
 
             hls = video.hls(Formats.h264())
             hls.encryption(
-                "../key/" + vidData["encode"] + ".bin",
-                ipf + "/hls/key/" + vidData["encode"],
+                "../upload/" + vidData['path'] + "/" + vidData["encode"] + '/' + vidData["encode"] + ".bin",
+                ipf + "/hls/key/" + vidData["path"] + "/" + vidData["encode"],
             )  # encrypt key maybe can change into api
             hls.auto_generate_representations()
-            print("convert")
             hls.output(
                 "../upload/"
                 + vidData.get("path")
@@ -200,20 +199,44 @@ def create_app(test_config=None):
                     ffmpeg, duration, time_, time_left, process, vidData["encode"]
                 ),
             )
-            print("convert success")
             updateVidData(vidData["videoPermit"], vidData["encode"])
             os.remove(path)
-        except Exception as e:
-            os.remove(path)
+
+
+            folder_name = vidData.get("path")
+            folder_path = "../upload/" + folder_name
+            size = 0
+
+            for path, dirs, files in os.walk(folder_path):
+                for f in files:
+                    fp = os.path.join(path, f)
+                    size += os.path.getsize(fp)
+
+            size = round(size / (1048576))  # bytes to mb
 
             conn = create_conn()
             cursor = conn.cursor()
-            
-            cursor.execute("DELETE FROM videos WHERE V_encode = %s", (vidData["encode"],))
-            
+            cursor.execute(
+                "UPDATE users SET U_storage = %s WHERE U_folder = %s", (size, vidData.get("path"))
+            )
             conn.commit()
             cursor.close()
             conn.close()
+
+
+        except Exception as e:
+            try:
+                os.remove(path)
+                conn = create_conn()
+                cursor = conn.cursor()
+                
+                cursor.execute("DELETE FROM videos WHERE V_encode = %s", (vidData["encode"],))
+                
+                conn.commit()
+                cursor.close()
+                conn.close()    
+            except:
+                pass
             pass
 
     def getThumbnail(path):
@@ -563,7 +586,7 @@ def create_app(test_config=None):
                     return ({"message": "No Permission"}), 406
             else:
                 return ({"message": "token invalid"}), 401
-        except Excaption as e:
+        except Exception as e:
             print(e)
             return ({"message": "query fail"}), 500
 
@@ -580,6 +603,17 @@ def create_app(test_config=None):
             try:
                 shutil.rmtree(path)
                 print('delete folder:', path)
+                try:
+                    conn = create_conn()
+                    cursor = conn.cursor()
+                    
+                    cursor.execute("DELETE FROM videos WHERE V_encode = %s", (V_encode,))
+                    
+                    conn.commit()
+                    cursor.close()
+                    conn.close()    
+                except:
+                    pass
             except:
                 return ({'message': 'delete fail'}), 500
             
@@ -710,6 +744,23 @@ def create_app(test_config=None):
             print(e)
             return ({"message": "query fail"}), 500
 
+    @app.route("/checkUpdate", methods=['POST'])
+    @token_required
+    def checkUpdate():
+        try:
+            data = request.get_json()
+            conn = create_conn()
+            cursor = conn.cursor()
+            cursor.execute("SELECT U_update FROM users WHERE U_ID = %s",
+                           (data['U_ID'],))
+            result = cursor.fetchone()
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return ({"update": result[0]}), 200
+        except:
+            return ({"message": 'query fail'}), 500
+            
 #--------------------- USER --------------------------#
     
     @app.route("/getUsers")
@@ -891,32 +942,33 @@ def create_app(test_config=None):
 
                     if f1 and f2:
                         cursor.execute(
-                            "UPDATE users SET U_name = %s, U_mail=%s, U_pro_pic=%s, U_banner=%s WHERE U_ID = %s",
+                            "UPDATE users SET U_name = %s, U_mail=%s, U_pro_pic=%s, U_banner=%s, U_update=%s WHERE U_ID = %s",
                             (
                                 data["username"],
                                 data["email"],
                                 pro64,
                                 banner64,
+                                1,
                                 data["U_id"],
                             ),
                         )
 
                     elif f1 and not f2:
                         cursor.execute(
-                            "UPDATE users SET U_name = %s, U_mail=%s, U_pro_pic=%s WHERE U_ID = %s",
-                            (data["username"], data["email"], pro64, data["U_id"]),
+                            "UPDATE users SET U_name = %s, U_mail=%s, U_pro_pic=%s, U_update=%s WHERE U_ID = %s",
+                            (data["username"], data["email"], pro64, 1, data["U_id"]),
                         )
 
                     elif not f1 and f2:
                         cursor.execute(
-                            "UPDATE users SET U_name = %s, U_mail=%s, U_banner=%s WHERE U_ID = %s",
-                            (data["username"], data["email"], banner64, data["U_id"]),
+                            "UPDATE users SET U_name = %s, U_mail=%s, U_banner=%s, U_update=%s WHERE U_ID = %s",
+                            (data["username"], data["email"], banner64, 1, data["U_id"]),
                         )
 
                     elif not f1 and not f2:
                         cursor.execute(
-                            "UPDATE users SET U_name = %s, U_mail=%s WHERE U_ID = %s",
-                            (data["username"], data["email"], data["U_id"]),
+                            "UPDATE users SET U_name = %s, U_mail=%s U_update=%s WHERE U_ID = %s",
+                            (data["username"], data["email"], 1, data["U_id"]),
                         )
 
                     conn.commit()
@@ -947,12 +999,13 @@ def create_app(test_config=None):
                     cursor = conn.cursor()
 
                     cursor.execute(
-                        "UPDATE users SET U_name=%s, U_mail=%s, U_permit=%s, U_type=%s WHERE U_ID=%s",
+                        "UPDATE users SET U_name=%s, U_mail=%s, U_permit=%s, U_type=%s, U_update=%s WHERE U_ID=%s",
                         (
                             data.get("U_name"),
                             data.get("U_mail"),
                             data.get("U_permit"),
                             data.get("U_type"),
+                            1,
                             data.get("U_id"),
                         ),
                     )
@@ -1341,7 +1394,6 @@ def create_app(test_config=None):
                 data = request.get_json()
 
                 if payload.get("U_id") == data["U_id"] or payload.get("U_type") == "admin":
-                    print(data)
                     conn = create_conn()
                     cursor = conn.cursor()
                     path = "../upload/" + data["U_folder"] + "/" + data["V_encode"]
@@ -1359,13 +1411,27 @@ def create_app(test_config=None):
                         "DELETE FROM videos WHERE U_ID=%s AND V_encode=%s",
                         (data["U_id"], data["V_encode"]),
                     )
-
                     conn.commit()
-                    cursor.close()
-                    conn.close()
 
                     try:
                         shutil.rmtree(path)
+                        folder_name = data["U_folder"]
+                        folder_path = "../upload/" + folder_name
+                        size = 0
+
+                        for f_path, dirs, f_files in os.walk(folder_path):
+                            for f in f_files:
+                                fp = os.path.join(f_path, f)
+                                size += os.path.getsize(fp)
+
+                        size = round(size / (1048576))  # bytes to mb
+
+                        cursor.execute(
+                            "UPDATE users SET U_storage = %s WHERE U_folder = %s", (size, data["U_folder"])
+                        )
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
                     except OSError as e:
                         pass
 
@@ -1735,147 +1801,182 @@ def create_app(test_config=None):
         except:
             return ({"message": "query fail"}), 500
 
-#--------------------- DYNAMIC URL --------------------------#
+#--------------------- hls api --------------------------#
 
-    @app.route("/get/dynamicUrl", methods=["POST"])
-    def getDynamic():
+    @app.route("/get/hls/token", methods=['POST'])
+    def hls_login():
         try:
             data = request.get_json()
 
-            conn = create_conn()
-
             email = data.get("email")
             plain_password = data.get("password")
-            vid_url = data.get("vid_url")
 
-            # get password
+            conn = create_conn()
             cursor = conn.cursor()
-            cursor.execute("SELECT U_ID, U_pass FROM users WHERE U_mail=%s", (email,))
+            cursor.execute("SELECT * FROM users WHERE U_mail=%s", (email,))
             data = cursor.fetchone()
 
             if data is not None:
-                hashed_password = data[1]
-                U_id = data[0]
-
-                if bcrypt.checkpw(
-                    plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-                ):
-                    url_token = secrets.token_hex(16)
-                    expiration_time = time.time() + 86400
-
-                    vid_url = vid_url.split("watch?")
-                    path = vid_url[-1].split("&")
-                    u = path[0][2:]
-                    v = path[1][2:]
-
-                    dynamic_url = f"{ipf}/get/hls/{url_token}/{u}/{v}"
-
-                    cursor.execute(
-                        "INSERT INTO url_token(url, url_expire, U_ID, V_ID) VALUE (%s, %s, %s, (SELECT V_ID FROM videos WHERE V_encode = %s))",
-                        (url_token, expiration_time, U_id, v),
-                    )
-
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
-
-                    return jsonify({"url": dynamic_url}), 200
-
+                hashed_password = data[3]
+                if bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
+                    cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s", (data[0], ))
+                    token = cursor.fetchone()
+                    return ({'message': 'developer token for get access to hls file on server',
+                             'url_token': token[0]}), 200
                 else:
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
-                    return ({"message": "unauthenlized"}), 400
+                    return ({'message': 'password not match'}), 400
+            else:
+                return ({'message': 'no data'}), 400
+        except:
+            return ({'message': 'query fail'}), 500
 
+    @app.route("/upload/hls", methods=['POST'])
+    def upload_hls():
+        try:
+            conn = create_conn()
+
+            email = request.form['email']
+            plain_password = request.form['password']
+
+            if 'video' not in request.files:
+                return ({'message': 'No file part'}), 400
+
+            # get password
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE U_mail=%s", (email,))
+            data = cursor.fetchone()
+            
+            
+            if data is not None:
+                hashed_password = data[3]
+                if bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
+                    if data[8] == 1:
+                        file = request.files['video']
+                        vidName = file.filename
+                        
+                        new_name = genFileName(vidName.split(".")[0])
+
+                        if file:
+                            save_path = (
+                                "../upload/"
+                                + data[9]
+                                + "/"
+                                + new_name
+                                + "."
+                                + vidName.split('.')[-1]
+                            )
+                            file.save(save_path)
+
+                            # Wait until the file is successfully saved
+                            while not os.path.exists(save_path):
+                                time.sleep(1)
+
+                            cap = cv2.VideoCapture(save_path)
+                            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                            video_duration = float(cap.get(cv2.CAP_PROP_FRAME_COUNT) / cap.get(cv2.CAP_PROP_FPS))
+                            video_size = int(os.path.getsize(save_path) / (1024))
+
+                            vid_data = {
+                                "videoName": file.filename,
+                                "videoDuration": video_duration,
+                                "videoSize": video_size,
+                                "videoThumbnail": '',
+                                "videoOwner": data[0],
+                                "encode": new_name,
+                                "videoDesc": '',
+                                "videoOriginName": file.name,
+                                "videoPermit": 'public',
+                                "path": data[9],
+                                "width": width,
+                                "height": height,
+                            }
+                            thread = threading.Thread(
+                                target=convert, args=(save_path, vid_data)
+                            )
+                            thread.start()
+
+
+                            cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s",
+                                        (data[0], ))
+                            token = cursor.fetchone()
+
+                            if token is None:
+                                token = genFileName(data[9])
+                                cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
+                                        (token, data[0]))
+
+                            conn.commit()
+                            cursor.close()
+                            conn.close()
+                            return({'message': 'Upload success. use this token to access hls video when convert complate',
+                                    'url_token': token}), 200
+                        else:
+                            return ({'message': 'no file'}), 400    
+                    else:
+                        return ({'message': 'no upload permission'}), 400
+                else:
+                    return ({'message': 'password not match'}), 400
             else:
                 conn.commit()
                 cursor.close()
                 conn.close()
-                return ({"message": "unauthenlized"}), 400
-        except:
-            return ({"message": "query fail"}), 500
+                return ({'message': 'No data'}), 400
 
-    @app.route("/get/dynamicUrl/token", methods=["POST"])
-    @token_required
-    def getDynamicWToken():
-        try:
-            data = request.get_json()
-            vid_url = data.get("vid_url")
-            U_id = data.get("U_id")
-
-            url_token = secrets.token_hex(16)
-            expiration_time = time.time() + 86400
-
-            vid_url = vid_url.split("watch?")
-            path = vid_url[-1].split("&")
-            u = path[0][2:]
-            v = path[1][2:]
-
-            conn = create_conn()
-            cursor = conn.cursor()
-
-            cursor.execute(
-                "INSERT INTO url_token(url, url_expire, U_ID, V_ID) VALUE (%s, %s, %s, (SELECT V_ID FROM videos WHERE V_encode = %s))",
-                (url_token, expiration_time, U_id, v),
-            )
-
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            dynamic_url = f"{ipf}/get/hls/{url_token}/{u}/{v}"
-
-            return jsonify({"url": dynamic_url}), 200
-        except:
-            return ({"message": "query fail"}), 500
-
-    @app.route("/get/url/no_login", methods=['POST'])
-    def url_no_login():
-        try:
-            data = request.get_json()
-            vid_url = data.get("vid_url")
-            U_id = data.get("U_id")
-
-            url_token = secrets.token_hex(16)
-            expiration_time = time.time() + 86400
-
-            vid_url = vid_url.split("watch?")
-            path = vid_url[-1].split("&")
-            u = path[0][2:]
-            v = path[1][2:]
-
-            conn = create_conn()
-            cursor = conn.cursor()
-
-            cursor.execute(
-                "INSERT INTO url_token(url, url_expire, U_ID, V_ID) VALUE (%s, %s, %s, (SELECT V_ID FROM videos WHERE V_encode = %s))",
-                (url_token, expiration_time, U_id, v),
-            )
-
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            dynamic_url = f"{ipf}/get/hls/{url_token}/{u}/{v}"
-
-            return jsonify({"url": dynamic_url}), 200
         except Exception as e:
-            return jsonify({"message": "query error"}), 500
+            print(e)
+            return ({'message': 'query fail'}), 400
+    
+    @app.route("/get/hls/<path:u>/<path:v>") #for web app
+    def get_hls_url(u, v):
+        try:
+            if ".m3u8" in v:
+                hls = v.split(".")
+                res = hls[0].split("_")
+                if os.path.exists(
+                    "../upload/" + u + "/" + res[0] + "/" + hls[0] + ".m3u8"
+                ):
+                    path = "./../upload/" + u + "/" + res[0] + "/"
+                    vid = hls[0] + ".m3u8"
+                    return send_from_directory(path, vid), 200
+                else:
+                    return ({"message": "file not found"}), 500
+            if ".ts" in v:
+                hls = v.split(".")
+                res = hls[0].split("_")
+                if os.path.exists(
+                    "../upload/" + u + "/" + res[0] + "/" + hls[0] + ".ts"
+                ):
+                    path = "./../upload/" + u + "/" + res[0] + "/"
+                    vid = hls[0] + ".ts"
+                    return send_from_directory(path, vid), 200
+                else:
+                    return ({"message": "file not found"}), 500
+            else:
+                if os.path.exists("../upload/" + u + "/" + v + "/" + v + ".m3u8"):
+                    path = "./../upload/" + u + "/" + v + "/"
+                    vid = v + ".m3u8"
+                    return send_from_directory(path, vid), 200
+                else:
+                    return ({"message": "file not found"}), 500
 
-    @app.route("/get/hls/<path:url_token>/<path:u>/<path:v>")
-    def getHls(url_token, u, v):
+        except:
+            return ({'message': 'query fail'}), 500
+
+    @app.route("/get/hls/file/<path:url_token>/<path:u>/<path:v>") #for dev
+    def get_hls_file(url_token, u, v):
         try:
             conn = create_conn()
             cursor = conn.cursor()
 
-            cursor.execute("SELECT url_expire FROM url_token WHERE url = %s", (url_token,))
+            cursor.execute("SELECT * FROM url_token WHERE url_token = %s", (url_token,))
             data = cursor.fetchone()
+            conn.commit()
+            cursor.close()
+            conn.close()
 
-            if time.time() <= data[0]:
+            if data is not None:
 
-                conn.commit()
-                cursor.close()
-                conn.close()
                 if ".m3u8" in v:
                     hls = v.split(".")
                     res = hls[0].split("_")
@@ -1907,95 +2008,64 @@ def create_app(test_config=None):
                         return ({"message": "file not found"}), 500
 
             else:
-                conn.commit()
-                cursor.close()
-                conn.close()
                 return ({"message": "content unavarible"}), 403
         except:
             return ({"message": "query fail"}), 500
 
-    @app.route("/hls/key/<path:v>")
-    def getKey(v):
+    @app.route("/get/hls/list/<path:url_token>")
+    def get_hls_list(url_token):
         try:
-            path = "../key/"+v+".bin"
+            conn = create_conn()
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "SELECT videos.*, users.U_name, users.U_folder \
+                    FROM videos, users \
+                    WHERE users.U_ID = (SELECT U_ID FROM url_token WHERE url_token = %s) \
+                    AND videos.U_ID = (SELECT U_ID FROM url_token WHERE url_token = %s)",
+                (url_token, url_token),
+            )
+            data = cursor.fetchall()
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            videos = []
+            for row in data:
+                tmp = str(row[6])
+                video = {
+                    "V_ID": row[0],
+                    "V_title": row[1],
+                    "V_view": row[2],
+                    "V_length": row[3],
+                    "V_size": row[4],
+                    "V_upload": row[5],
+                    # "V_pic": tmp[2:-1],
+                    "U_ID": row[7],
+                    "V_encode": row[9],
+                    "V_quality": row[10],
+                    "V_desc": row[11],
+                    "U_name": row[12],
+                    "U_folder": row[13],
+                    "url": ipf + '/get/hls/file/' + url_token + '/' + row[13] + '/' + row[9]
+                }
+                print(video)
+                videos.append(video)
+
+            return jsonify(videos), 200
+
+            return (), 200
+        except Exception as e:
+            print(e)
+            return ({'message': 'query fail'}), 500
+
+    @app.route("/hls/key/<path:u>/<path:v>")
+    def getKey(u,v):
+        try:
+            path = "../upload/"+u+"/"+v+"/"+v+".bin"
             return send_file(path)
         except:
             return({"message": "no key"}), 500
-
-    @app.route("/get/url_token/user", methods=["GET"])
-    @token_required
-    def get_url_user():
-        try:
-            u = request.args.get('u')
-            conn = create_conn()
-            cursor = conn.cursor()
-            cursor.execute("SELECT token.*, u.U_folder, v.V_encode FROM url_token AS token, users AS u, videos AS v WHERE u.U_ID = token.U_ID AND v.V_ID = token.V_ID AND token.U_ID = %s", (u,))
-            data = cursor.fetchall()
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            urls = []
-            for row in data:
-                url = {
-                    "url": row[1],
-                    "create_at": row[2],
-                    "url_expire": datetime.utcfromtimestamp(row[3]),
-                    "U_ID": row[4],
-                    "V_ID": row[5],
-                    "U_folder": row[6],
-                    "V_encode": row[7]
-                }
-                urls.append(url)
-
-            return jsonify(urls), 200
-        except:
-            return ({"message": "query fail"}), 500
-
-    @app.route("/get/url_token", methods=["GET"])
-    @token_required
-    def get_url():
-        try:
-            conn = create_conn()
-            cursor = conn.cursor()
-            cursor.execute("SELECT token.*, u.U_folder, v.V_encode FROM url_token AS token, users AS u, videos AS v WHERE u.U_ID = token.U_ID AND v.V_ID = token.V_ID ORDER BY token.created_at DESC")
-            data = cursor.fetchall()
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            urls = []
-            for row in data:
-                url = {
-                    "url": row[1],
-                    "create_at": row[2],
-                    "url_expire": datetime.utcfromtimestamp(row[3]),
-                    "U_ID": row[4],
-                    "V_ID": row[5],
-                    "U_folder": row[6],
-                    "V_encode": row[7]
-                }
-                urls.append(url)
-
-            return jsonify(urls), 200
-        except:
-            return ({"message": "query fail"}), 500
-
-    @app.route("/delete/url_token", methods=["POST"])
-    @token_required
-    def delete_url():
-        try:
-            conn = create_conn()
-            cursor = conn.cursor()
-            current_time = time.time()
-            cursor.execute("DELETE FROM url_token WHERE url_expire < %s", (current_time,))
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            return ({"message": "delete success"}), 200
-        except:
-            return ({"message": "query fail"}), 500
 
 #--------------------- SERVER --------------------------#
 
