@@ -1926,93 +1926,87 @@ def create_app(test_config=None):
             print(e) 
             return ({'message': 'query fail'}), 500
 
-    @app.route("/upload/hls", methods=['POST'])
-    def upload_hls():
+    @app.route("/upload/hls/<path:token>", methods=['POST'])
+    def upload_hls(token):
         try:
             conn = create_conn()
-
-            email = request.form['email']
-            plain_password = request.form['password']
 
             if 'video' not in request.files:
                 return ({'message': 'No file part'}), 400
 
             # get password
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM users WHERE U_mail=%s", (email,))
+            cursor.execute("SELECT * FROM users WHERE U_ID=(SELECT U_ID FROM url_token WHERE url_token=%s)", (token,))
             data = cursor.fetchone()
             
             
             if data is not None:
-                hashed_password = data[3]
-                if bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
-                    if data[8] == 1:
-                        file = request.files['video']
-                        vidName = file.filename
-                        
-                        new_name = genFileName(vidName.split(".")[0])
+                if data[8] == 1:
+                    file = request.files['video']
+                    vidName = file.filename
+                    
+                    new_name = genFileName(vidName.split(".")[0])
 
-                        if file:
-                            save_path = (
-                                "../upload/"
-                                + data[9]
-                                + "/"
-                                + new_name
-                                + "."
-                                + vidName.split('.')[-1]
-                            )
-                            file.save(save_path)
+                    if file:
+                        save_path = (
+                            "../upload/"
+                            + data[9]
+                            + "/"
+                            + new_name
+                            + "."
+                            + vidName.split('.')[-1]
+                        )
+                        file.save(save_path)
 
-                            # Wait until the file is successfully saved
-                            while not os.path.exists(save_path):
-                                time.sleep(1)
+                        # Wait until the file is successfully saved
+                        while not os.path.exists(save_path):
+                            time.sleep(1)
 
-                            cap = cv2.VideoCapture(save_path)
-                            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                            video_duration = float(cap.get(cv2.CAP_PROP_FRAME_COUNT) / cap.get(cv2.CAP_PROP_FPS))
-                            video_size = int(os.path.getsize(save_path) / (1024))
+                        cap = cv2.VideoCapture(save_path)
+                        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                        video_duration = float(cap.get(cv2.CAP_PROP_FRAME_COUNT) / cap.get(cv2.CAP_PROP_FPS))
+                        video_size = int(os.path.getsize(save_path) / (1024))
 
-                            vid_data = {
-                                "videoName": file.filename,
-                                "videoDuration": video_duration,
-                                "videoSize": video_size,
-                                "videoThumbnail": '',
-                                "videoOwner": data[0],
-                                "encode": new_name,
-                                "videoDesc": '',
-                                "videoOriginName": file.name,
-                                "videoPermit": 'public',
-                                "path": data[9],
-                                "width": width,
-                                "height": height,
-                            }
-                            thread = threading.Thread(
-                                target=convert, args=(save_path, vid_data)
-                            )
-                            thread.start()
+                        vid_data = {
+                            "videoName": file.filename,
+                            "videoDuration": video_duration,
+                            "videoSize": video_size,
+                            "videoThumbnail": '',
+                            "videoOwner": data[0],
+                            "encode": new_name,
+                            "videoDesc": '',
+                            "videoOriginName": file.name,
+                            "videoPermit": 'public',
+                            "path": data[9],
+                            "width": width,
+                            "height": height,
+                        }
+                        thread = threading.Thread(
+                            target=convert, args=(save_path, vid_data)
+                        )
+                        thread.start()
 
 
-                            cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s",
-                                        (data[0], ))
-                            token = cursor.fetchone()
+                        cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s",
+                                    (data[0], ))
+                        token = cursor.fetchone()
 
-                            if token is None:
-                                token = genFileName(data[9] + '-' + secrets.token_hex(16))
-                                cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
-                                        (token, data[0]))
+                        if token is None:
+                            token = genFileName(data[9] + '-' + secrets.token_hex(16))
+                            cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
+                                    (token, data[0]))
 
-                            conn.commit()
-                            cursor.close()
-                            conn.close()
-                            return({'message': 'Upload success. use this token to access hls video when convert complate',
-                                    'url_token': token}), 200
-                        else:
-                            return ({'message': 'no file'}), 400    
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        return({'message': 'Upload success. use this token to access hls video when convert complate',
+                                'url_token': token}), 200
                     else:
-                        return ({'message': 'no upload permission'}), 400
+                        return ({'message': 'no file'}), 400    
                 else:
-                    return ({'message': 'password not match'}), 400
+                    return ({'message': 'no upload permission'}), 400
+            
             else:
                 conn.commit()
                 cursor.close()
