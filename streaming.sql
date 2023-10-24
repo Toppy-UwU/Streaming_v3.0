@@ -121,9 +121,6 @@ CREATE TABLE `users` (
   `U_storage` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `users` (`U_ID`, `U_name`, `U_mail`, `U_pass`, `U_type`, `U_vid`, `U_pro_pic`, `created_at`, `U_permit`, `U_folder`, `U_banner`, `U_storage`) VALUES
-(0, '', '', '', 'user', 0, '', '2023-10-15 02:16:12', 0, '', '', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -134,15 +131,15 @@ CREATE TABLE `videos` (
   `V_ID` int(11) NOT NULL,
   `V_title` varchar(255) NOT NULL,
   `V_view` int(11) DEFAULT 0,
-  `V_length` varchar(255) NOT NULL,
+  `V_length` varchar(50) NOT NULL,
   `V_size` int(11) NOT NULL,
   `V_upload` timestamp NULL DEFAULT current_timestamp(),
   `V_pic` longblob DEFAULT NULL,
   `U_ID` int(11) NOT NULL,
-  `V_permit` varchar(255) NOT NULL,
-  `V_encode` varchar(255) NOT NULL,
-  `V_quality` varchar(255) NOT NULL,
-  `V_desc` varchar DEFAULT NULL
+  `V_permit` varchar(50) NOT NULL,
+  `V_encode` varchar(50) NOT NULL,
+  `V_quality` varchar(10) NOT NULL,
+  `V_desc` varchar(5000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
