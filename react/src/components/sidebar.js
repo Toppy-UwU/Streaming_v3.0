@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import { getlocalData, isSessionSet } from './session';
+import { getToken, getlocalData, isSessionSet } from './session';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './../css/sidebar.css';
 import './../css/swal2theme.css';
@@ -12,6 +12,7 @@ const Sidebar = ({ children }) => {
   const [searchBox, setSearchBox] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const ip = global.config.ip.ip;
+  const update_check = ip + '/checkUpdate';
 
   const toggleSearchBox = () => {
     setSearchBox(!searchBox);
@@ -35,6 +36,24 @@ const Sidebar = ({ children }) => {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
+    const data = {
+      'U_ID': session.U_id
+    }
+    fetch(update_check, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getToken()
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.update == 1) {
+        
+      }
+    })
+    .catch(error => { });
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -91,6 +110,8 @@ const Sidebar = ({ children }) => {
     } else {
       var session = getlocalData('session');
       var isLoggedIn = getlocalData('isLoggedIn');
+      
+
     }
   }
 

@@ -34,7 +34,6 @@ const WatchPage = () => {
     const [videos, setVideos] = useState(null); //show video
     const [vidDetail, setVidDetail] = useState(null); // played video data
     const [showDesc, setshowDesc] = useState(false);
-    const [url, setUrl] = useState('');
 
     const user = param.get('u');
     const video = param.get('v');
@@ -45,45 +44,8 @@ const WatchPage = () => {
     const navigate = useNavigate();
 
     const api = ip + '/get/video/info?v=' + video + '&u=' + c_user;
-    let dynamicAPI = ''
-
-    useEffect(() => {
-        let tmp_U_id = '';
-        let header = {};
-
-        if (isSessionSet('isLoggedIn')) {
-            const session = getlocalData('session');
-            tmp_U_id = session.U_id;
-            dynamicAPI = ip + '/get/dynamicUrl/token'
-            header = {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + getToken()
-            }
-
-        } else {
-            tmp_U_id = 0;
-            dynamicAPI = ip + '/get/url/no_login'
-            header = {
-                'Content-Type': 'application/json',
-            }
-        }
-
-        const tmp = {
-            'vid_url': '/watch?u=' + user + '&v=' + video,
-            'U_id': tmp_U_id
-        }
-        fetch(dynamicAPI, {
-            method: 'POST',
-            headers: header,
-            body: JSON.stringify(tmp)
-
-        }).then(response => response.json())
-            .then(data => {
-                setUrl(data.url)
-            })
-            .catch(() => { })
-    }, [])
-
+    const url = ip + '/get/hls/' + user + '/' + video
+    
     useEffect(() => {
         fetch(api)
             .then(response => response.json())
