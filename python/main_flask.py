@@ -382,7 +382,7 @@ def create_app(test_config=None):
                     conn.close()
 
                     if check == 1 or check == "1":
-                        print("1 month")
+                        
                         payload = {
                             "U_id": data[0],
                             "U_type": data[4],
@@ -390,7 +390,7 @@ def create_app(test_config=None):
                             "exp": datetime.utcnow() + timedelta(days=30),
                         }
                     else:
-                        print("1 hours")
+                        
                         payload = {
                             "U_id": data[0],
                             "U_type": data[4],
@@ -480,7 +480,6 @@ def create_app(test_config=None):
         try:
             u = request.args.get("u")
             conn = create_conn()
-
             cursor = conn.cursor()
             cursor.execute(
                 "SELECT v.*, u.U_name, u.U_folder \
@@ -546,7 +545,16 @@ def create_app(test_config=None):
                 tmp = token.split(" ")[-1]
                 payload = jwt.decode(tmp, app.config["SECRET_KEY"], algorithms=["HS256"])
 
-                if payload.get("U_permit") == 1:
+                conn = create_conn()
+                cursor = conn.cursor()
+                cursor.execute("SELECT U_permit FROM users WHERE U_ID = %s",
+                               (payload.get("U_id"),))
+                permit = cursor.fetchone()
+                conn.commit()
+                cursor.close()
+                conn.close()
+
+                if permit[0] == 1:
                     file = request.files["video"]
                     data = request.form["data"]
 
@@ -748,17 +756,50 @@ def create_app(test_config=None):
     @token_required
     def checkUpdate():
         try:
-            data = request.get_json()
+            input_data = request.get_json()
             conn = create_conn()
             cursor = conn.cursor()
-            cursor.execute("SELECT U_update FROM users WHERE U_ID = %s",
-                           (data['U_ID'],))
-            result = cursor.fetchone()
-            conn.commit()
-            cursor.close()
-            conn.close()
-            return ({"update": result[0]}), 200
-        except:
+            cursor.execute("SELECT * FROM users WHERE U_ID = %s",
+                           (input_data['U_ID'],))
+            data = cursor.fetchone()
+
+            if data[12] == 1:
+                cursor.execute("UPDATE users SET U_update = %s WHERE U_ID = %s",
+                            (0, input_data['U_ID'],))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                payload = {
+                            "U_id": data[0],
+                            "U_type": data[4],
+                            "U_permit": data[8],
+                            "exp": datetime.utcnow() + timedelta(days=30),
+                        }
+                token = jwt.encode(payload, app.config["SECRET_KEY"], algorithm="HS256")                
+                tmp = str(data[6])
+                update = {
+                    "token": token,
+                    "update": data[12],
+                    "data": {
+                        "U_id": data[0],
+                        "username": data[1],
+                        "email": data[2],
+                        "U_type": data[4],
+                        "vid": data[5],
+                        "U_pro_pic": tmp[2:-1],
+                        "U_permit": data[8],
+                        "U_folder": data[9],
+                        "U_storage": data[11]
+                    },
+                }
+                
+                return jsonify(update), 200
+            else:
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return ({'update': data[12]})
+        except Exception as e:
             return ({"message": 'query fail'}), 500
             
 #--------------------- USER --------------------------#
@@ -1803,8 +1844,8 @@ def create_app(test_config=None):
 
 #--------------------- hls api --------------------------#
 
-    @app.route("/get/hls/token", methods=['POST'])
-    def hls_login():
+    @app.route("/get/hls/token", methods=['POST']) # request on api
+    def hls_authen():
         try:
             data = request.get_json()
 
@@ -1821,13 +1862,68 @@ def create_app(test_config=None):
                 if bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
                     cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s", (data[0], ))
                     token = cursor.fetchone()
-                    return ({'message': 'developer token for get access to hls file on server',
+                    
+                    if token is not None:
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        return ({'message': 'developer token for get access to hls file on server',
                              'url_token': token[0]}), 200
+                    else:
+                        token = genFileName(data[9] + '-' + secrets.token_hex(16))
+                        cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
+                                    (token, data[0]))
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        return ({'message': 'developer token for get access to hls file on server',
+                             'url_token': token}), 200
+
+
                 else:
                     return ({'message': 'password not match'}), 400
             else:
                 return ({'message': 'no data'}), 400
         except:
+            return ({'message': 'query fail'}), 500
+        
+    @app.route("/get/hls/token/jwt", methods=['POST']) # request on web
+    @token_required
+    def hls_authen_jwt():
+        try:
+            token = request.headers.get("Authorization")
+            tmp = token.split(' ')[-1]
+            payload = jwt.decode(tmp, app.config["SECRET_KEY"], algorithms=["HS256"])
+
+            conn = create_conn()
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE U_ID=%s", (payload.get('U_id'),))
+            data = cursor.fetchone()
+
+            if data is not None:
+                cursor.execute("SELECT url_token FROM url_token WHERE U_ID = %s", (data[0], ))
+                token = cursor.fetchone()
+                
+                if token is not None:
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+                    return ({'message': 'developer token for get access to hls file on server',
+                            'url_token': token[0]}), 200
+                else:
+                    token = genFileName(data[9] + '-' + secrets.token_hex(16))
+                    cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
+                                (token, data[0]))
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+                    return ({'message': 'developer token for get access to hls file on server',
+                            'url_token': token}), 200
+            
+            else:
+                return ({'message': 'password not match'}), 400
+        except Exception as e:
+            print(e) 
             return ({'message': 'query fail'}), 500
 
     @app.route("/upload/hls", methods=['POST'])
@@ -1902,7 +1998,7 @@ def create_app(test_config=None):
                             token = cursor.fetchone()
 
                             if token is None:
-                                token = genFileName(data[9])
+                                token = genFileName(data[9] + '-' + secrets.token_hex(16))
                                 cursor.execute("INSERT INTO url_token(url_token, U_ID) VALUES (%s, %s)",
                                         (token, data[0]))
 
@@ -2058,7 +2154,7 @@ def create_app(test_config=None):
         except Exception as e:
             print(e)
             return ({'message': 'query fail'}), 500
-
+    
     @app.route("/hls/key/<path:u>/<path:v>")
     def getKey(u,v):
         try:
