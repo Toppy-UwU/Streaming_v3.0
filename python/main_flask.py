@@ -5,7 +5,7 @@ import secrets
 import shutil
 import string
 from flask import Flask, json, request, jsonify, send_file, send_from_directory
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from ffmpeg_streaming import Formats
 from PIL import Image
 import ffmpeg_streaming
@@ -88,10 +88,10 @@ def update_network_stats():
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "123" #change on product for jwt
+    app.config["SECRET_KEY"] = "Hgdb5eJeRbldC/wVIU1ee/NvnY8WaMGajNOBXGtuM0KfM6kzvFB84mDNnCY/tJcQ" #change on product for jwt
 
     CORS(app)
-    app.config["CORS_ORIGINS"] = ['*']
+    app.config["CORS_ORIGINS"] = [server_ip]
     app.config["CORS_METHODS"] = ["GET", "POST", "OPTIONS"]
     app.config["CORS_HEADERS"] = ["Content-Type"]
 
@@ -1008,7 +1008,7 @@ def create_app(test_config=None):
 
                     elif not f1 and not f2:
                         cursor.execute(
-                            "UPDATE users SET U_name = %s, U_mail=%s U_update=%s WHERE U_ID = %s",
+                            "UPDATE users SET U_name = %s, U_mail=%s, U_update=%s WHERE U_ID = %s",
                             (data["username"], data["email"], 1, data["U_id"]),
                         )
 
