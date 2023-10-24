@@ -1,12 +1,13 @@
 import React from "react";
 import Sidebar from "./../components/sidebar"
-import { getlocalData, isSessionSet, removelocalData } from './../components/session';
+import { getToken, getlocalData, isSessionSet } from './../components/session';
 import './../css/setting.css';
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import UserUpdate from '../components/userUpdateModal';
 import UpdatePasswordModal from "../components/userPasswordModal";
 import { ip } from "../config";
+import copy from 'copy-to-clipboard';
 
 const SettingPage = () => {
     document.title = "Setting";
@@ -19,6 +20,27 @@ const SettingPage = () => {
         } else {
             var session = getlocalData('session');
         }
+    }
+
+    const handleGetAPI = () => {
+        const getTokenAPI = ip.ip + '/get/hls/token/jwt'
+        fetch(getTokenAPI, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getToken()
+            },
+        }).then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                title: 'API Token',
+                text: data.url_token,
+                confirmButtonText: 'Copy',
+                showConfirmButton: true,
+            }).then(() => {
+                copy(data.url_token)
+            })
+        }).catch({})
     }
 
     const handleDelete = (U_id, U_folder) => {
@@ -111,6 +133,13 @@ const SettingPage = () => {
                                         <h4><i className="bi bi-lock-fill"></i> Password</h4>
                                         <p>Manage your password</p>
                                     </div>
+                                </Link>
+                                <hr className='text-white' />
+                                <Link to="#" className="text-decoration-none">
+                                <div className="col-12" onClick={handleGetAPI}>
+                                    <h4><i className="bi bi-code"></i> Get API token</h4>
+                                    <p>Get API token for access video file</p>
+                                </div>
                                 </Link>
                                 <hr className='text-white' />
                                 <Link to="#" className="text-decoration-none">

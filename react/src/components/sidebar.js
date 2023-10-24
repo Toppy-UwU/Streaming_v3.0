@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import { getToken, getlocalData, isSessionSet } from './session';
+import { getToken, getlocalData, isSessionSet, removelocalData, setlocalData } from './session';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './../css/sidebar.css';
 import './../css/swal2theme.css';
@@ -36,24 +36,33 @@ const Sidebar = ({ children }) => {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
-    const data = {
-      'U_ID': session.U_id
-    }
-    fetch(update_check, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getToken()
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.update == 1) {
-        
+    if(isSessionSet('session')) {
+      const data = {
+        'U_ID': session.U_id
       }
-    })
-    .catch(error => { });
+  
+      fetch(update_check, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + getToken()
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.update === 1){
+          console.log(getlocalData('session'));
+          removelocalData('session')
+          removelocalData('token')
+          setlocalData('session', data.data)
+          setlocalData('token', data.token)
+          console.log(getlocalData('session'));
+        }
+      })
+      .catch(error => { });
+    }
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
