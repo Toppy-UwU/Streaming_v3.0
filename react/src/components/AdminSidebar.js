@@ -53,12 +53,10 @@ const AdminSidebar = ({ children }) => {
       .then(response => response.json())
       .then(data => {
         if(data.update === 1){
-          console.log(getlocalData('session'));
           removelocalData('session')
           removelocalData('token')
           setlocalData('session', data.data)
           setlocalData('token', data.token)
-          console.log(getlocalData('session'));
         }
       })
       .catch(error => { });

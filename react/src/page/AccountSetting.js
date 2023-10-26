@@ -48,8 +48,6 @@ const AccountSettingPage = () => {
     const [email, setEmail] = useState(user.U_mail);
     const [propic, setPropic] = useState(user.U_pro_pic);
     const [bannerpic, setBannerpic] = useState(user.U_banner);
-    console.log(user)
-    console.log(email)
 
     const handleUsername = (e) => {
         setUsername(e.target.value);
@@ -96,7 +94,7 @@ const AccountSettingPage = () => {
             .catch((e) => {
                 console.error(e);
             })
-        { console.log(data) }
+        { }
     }
 
     return (

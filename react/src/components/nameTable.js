@@ -62,7 +62,6 @@ const NameTable = (props) => {
             'U_permit': 1
         };
         users.push(tmp);
-        console.log(users);
         setAddUser(users);
       }
 

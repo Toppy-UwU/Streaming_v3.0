@@ -4,7 +4,7 @@ import VideoPlayer from '../components/player';
 import { getAPI } from '../components/callAPI';
 import 'video.js/dist/video-js.css';
 import { useState, useEffect } from 'react';
-import { checkVidPermit, getUser, isAdmin, isSessionSet, getToken, getlocalData } from '../components/session';
+import { checkVidPermit, getUser, isAdmin, isSessionSet, getToken, getlocalData, setlocalData } from '../components/session';
 import VideoUpdateModal from '../components/videoUpdateModal';
 import { createHistory } from '../components/saveHistories';
 import '../config';
@@ -34,6 +34,7 @@ const WatchPage = () => {
     const [videos, setVideos] = useState(null); //show video
     const [vidDetail, setVidDetail] = useState(null); // played video data
     const [showDesc, setshowDesc] = useState(false);
+    const [access_file, setAccess_file] = useState('');
 
     const user = param.get('u');
     const video = param.get('v');
@@ -157,23 +158,67 @@ const WatchPage = () => {
     }
 
     const handleAPI = () => {
-        Swal.fire({
-            title: 'API for other app',
-            text: url,
-            confirmButtonText: 'Copy',
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                copy(url);
+        
+            if(!isSessionSet('url_token')) {
+                fetch((ip + '/get/hls/token/jwt'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getToken()
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    setlocalData('url_token', data.url_token);
+                    setAccess_file(ip + '/get/hls/file/' + data.url_token + '/' + vidDetail.U_folder + '/' + vidDetail.V_encode)
+                    Swal.fire({
+                        title: 'API for other app',
+                        text: ip + '/get/hls/file/' + data.url_token + '/' + vidDetail.U_folder + '/' + vidDetail.V_encode,
+                        confirmButtonText: 'Copy',
+                        showCancelButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            copy(url);
+                            Swal.fire({
+                                title: 'Copied!',
+                                text: 'API has been copied to the clipboard.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+                    });
+                })
+                .catch(e => { })
+
+                
+                
+            }else{
+                const url_token = getlocalData('url_token')
+                setAccess_file(ip + '/get/hls/file/' + url_token + '/' + vidDetail.U_folder + '/' + vidDetail.V_encode);
+    
                 Swal.fire({
-                    title: 'Copied!',
-                    text: 'API has been copied to the clipboard.',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000
+                    title: 'API for other app',
+                    text: access_file,
+                    confirmButtonText: 'Copy',
+                    showCancelButton: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        copy(url);
+                        Swal.fire({
+                            title: 'Copied!',
+                            text: 'API has been copied to the clipboard.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
                 });
             }
-        });
+        
+
+        
+
+        
     }
 
     const handleDeleteVideoDialog = () => {
@@ -245,9 +290,11 @@ const WatchPage = () => {
                                         <ul className="dropdown-menu dropdown-menu-dark">
                                             <li><button className="dropdown-item" type="button" onClick={handleShare}><i className="bi bi-share"></i> Share</button></li>
                                             <li><button className="dropdown-item" type="button" onClick={handleDownloadBtn}><i className="bi bi-download"></i> Download</button></li>
-                                            <li>
-                                                <button className="dropdown-item" type="button" onClick={handleAPI}><i className="bi bi-link"></i> Get API</button>
-                                            </li>
+                                            {isSessionSet('isLoggedIn') && 
+                                                <li>
+                                                    <button className="dropdown-item" type="button" onClick={handleAPI}><i className="bi bi-link"></i> Get API</button>
+                                                </li>
+                                            }
                                             {(f1 || f2) &&
                                                 <li>
                                                     <button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#UpdateVideoModal"><i className="bi bi-gear"></i> Setting</button>

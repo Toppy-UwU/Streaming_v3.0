@@ -93,7 +93,8 @@ const UserUpdate = (props) => {
         formData.append('banner', bannerpic);
 
         const token = getToken();
-
+        console.log(token);
+        console.log(session);
         fetch(api, {
             method: 'POST',
             headers: {

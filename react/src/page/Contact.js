@@ -8,7 +8,6 @@ const Contact = () => {
   if (isLoggedIn) {
     return <h2>Contact</h2>;
   } else {
-    console.log('not login yet')
     return  <Navigate to="/login" /> 
   }
 
