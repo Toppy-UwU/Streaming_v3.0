@@ -1926,7 +1926,7 @@ def create_app(test_config=None):
             print(e) 
             return ({'message': 'query fail'}), 500
 
-    @app.route("/upload/hls/<path:token>", methods=['POST'])
+    @app.route("/upload/hls/<path:token>", methods=['POST']) # for dev
     def upload_hls(token):
         try:
             conn = create_conn()
@@ -2102,7 +2102,7 @@ def create_app(test_config=None):
         except:
             return ({"message": "query fail"}), 500
 
-    @app.route("/get/hls/list/<path:url_token>")
+    @app.route("/get/hls/list/<path:url_token>") # for fev get video list
     def get_hls_list(url_token):
         try:
             conn = create_conn()
@@ -2149,7 +2149,7 @@ def create_app(test_config=None):
             print(e)
             return ({'message': 'query fail'}), 500
     
-    @app.route("/hls/key/<path:u>/<path:v>")
+    @app.route("/hls/key/<path:u>/<path:v>") # for get key
     def getKey(u,v):
         try:
             path = "../upload/"+u+"/"+v+"/"+v+".bin"
