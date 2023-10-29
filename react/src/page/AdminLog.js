@@ -4,6 +4,7 @@ import AdminSidebar from "../components/AdminSidebar";
 import '../config'
 import "../css/admin.css"
 import moment from "moment";
+import { isAdmin } from "../components/session";
 
 const AdminLog = () => {
     const [logs, setLogs] = useState([]);
@@ -54,7 +55,7 @@ const AdminLog = () => {
         {
             name: 'Timestamp',
             selector: row => row.created_at,
-            cell : (row) => moment.utc(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
+            cell: (row) => moment(row.created_at).format("DD MMMM YYYY : HH:mm:ss"),
             sortable: true
         },
 
@@ -98,53 +99,55 @@ const AdminLog = () => {
         },
     }, 'dark');
 
-    if (logs !== null) {
-        return (
-            <AdminSidebar>
-                <div className="container-fluid">
-                    <br />
-                    <div className='PageTitle'>
-                        <h2><i className="bi bi-info-circle-fill"></i> User Logs</h2>
-                    </div>
+    if (isAdmin()) {
+        if (logs !== null) {
+            return (
+                <AdminSidebar>
+                    <div className="container-fluid">
+                        <br />
+                        <div className='PageTitle'>
+                            <h2><i className="bi bi-info-circle-fill"></i> User Logs</h2>
+                        </div>
 
-                    <div className='user-table'>
-                        <div className="card">
-                            <div className="card-body">
-                                <DataTable
-                                    customStyles={tableHeaderStyle}
-                                    columns={columns}
-                                    data={filter}
-                                    pagination
-                                    fixedHeader
-                                    highlightOnHover
-                                    theme="solarized"
-                                    subHeader
-                                    subHeaderComponent={
-                                        <input type="text"
-                                            className="w-25 form-control"
-                                            placeholder="Search..."
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
-                                        />
-                                    }
-                                ></DataTable>
+                        <div className='user-table'>
+                            <div className="card">
+                                <div className="card-body">
+                                    <DataTable
+                                        customStyles={tableHeaderStyle}
+                                        columns={columns}
+                                        data={filter}
+                                        pagination
+                                        fixedHeader
+                                        highlightOnHover
+                                        theme="solarized"
+                                        subHeader
+                                        subHeaderComponent={
+                                            <input type="text"
+                                                className="w-25 form-control"
+                                                placeholder="Search..."
+                                                value={search}
+                                                onChange={(e) => setSearch(e.target.value)}
+                                            />
+                                        }
+                                    ></DataTable>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </AdminSidebar>
-        )
+                </AdminSidebar>
+            )
+        } else {
+            return (
+                <AdminSidebar>
+                    <div className="center">
+                        <div className="loading" />
+                    </div>
+                </AdminSidebar>
+            )
+        }
     } else {
-        return (
-            <AdminSidebar>
-                <div className="center">
-                    <div className="loading" />
-                </div>
-            </AdminSidebar>
-        )
+        window.location.href = '/';
     }
-
-
 }
 
 export default AdminLog;

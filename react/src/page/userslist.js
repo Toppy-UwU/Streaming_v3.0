@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import AddUserModal from "../components/UserModal";
 import UpdateUserModal from "../components/UpdateUserModal";
 import { ip } from "../config";
+import { isAdmin } from "../components/session";
 
 const UserListPage = () => {
     const [users, setUsers] = useState([]);
@@ -114,14 +115,14 @@ const UserListPage = () => {
             name: 'E-mail',
             selector: row => row.U_mail,
             sortable: true,
-            hide: Media.MD
+            hide: Media.SM
         },
         {
             name: 'Upload Permit',
             selector: row => row.U_permit,
             sortable: true,
             cell: (row) => (row.U_permit === 1 ? "Yes" : "No"),
-            hide: Media.MD
+            hide: Media.SM
         },
         {
             name: 'Role',
@@ -215,54 +216,59 @@ const UserListPage = () => {
         },
     }, 'dark');
 
-    if (users) {
-        return (
-            <AdminSidebar>
-                <div className="container-fluid content">
-                    <div className='PageTitle'>
-                        <h2><i className="bi bi-people-fill"></i> Users</h2>
-                    </div>
-
-                    <div className='user-table'>
-                        <div className="card">
-                            <div className="card-body">
-                                <DataTable
-                                    customStyles={tableHeaderStyle}
-                                    columns={columns}
-                                    data={filter}
-                                    pagination
-                                    fixedHeader
-                                    highlightOnHover
-                                    theme="solarized"
-                                    actions={
-                                        <button className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addUserModal"><span><i class="bi bi-person-plus"></i> </span>Add User</button>
-                                    }
-                                    subHeader
-                                    subHeaderComponent={
-                                        <input type="text"
-                                            className="w-25 form-control"
-                                            placeholder="Search..."
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
-                                        />
-                                    }
-                                ></DataTable>
-                            </div>
+    if (isAdmin()) {
+        if (users) {
+            return (
+                <AdminSidebar>
+                    <div className="container-fluid content">
+                        <div className='PageTitle'>
+                            <h2><i className="bi bi-people-fill"></i> Users</h2>
                         </div>
-                        <br />
+
+                        <div className='user-table'>
+                            <div className="card">
+                                <div className="card-body">
+                                    <DataTable
+                                        customStyles={tableHeaderStyle}
+                                        columns={columns}
+                                        data={filter}
+                                        pagination
+                                        fixedHeader
+                                        highlightOnHover
+                                        theme="solarized"
+                                        actions={
+                                            <button className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addUserModal"><span><i class="bi bi-person-plus"></i> </span>Add User</button>
+                                        }
+                                        subHeader
+                                        subHeaderComponent={
+                                            <input type="text"
+                                                className="w-25 form-control"
+                                                placeholder="Search..."
+                                                value={search}
+                                                onChange={(e) => setSearch(e.target.value)}
+                                            />
+                                        }
+                                    ></DataTable>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <AddUserModal />
+                        <UpdateUserModal data={selectedRow} />
                     </div>
-                    <AddUserModal />
-                    <UpdateUserModal data={selectedRow} />
+                </AdminSidebar>
+            )
+        } else {
+            <AdminSidebar>
+                <div className="center">
+                    <div className="loading" style={{ marginTop: '25%' }}></div>
                 </div>
             </AdminSidebar>
-        )
+        }
     } else {
-        <AdminSidebar>
-            <div className="center">
-                <div className="loading" style={{ marginTop: '25%' }}></div>
-            </div>
-        </AdminSidebar>
+        window.location.href = '/';
     }
+
 }
 
 export default UserListPage;

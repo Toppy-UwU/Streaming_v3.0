@@ -5,8 +5,9 @@ import AdminSidebar from "../components/AdminSidebar";
 import { getAPI } from '../components/callAPI';
 import DataTable, { createTheme, Media } from "react-data-table-component";
 import '../config'
-import { getToken } from "../components/session";
+import { getToken, isAdmin } from "../components/session";
 import Swal from "sweetalert2";
+
 
 
 const VideosListPage = () => {
@@ -182,54 +183,57 @@ const VideosListPage = () => {
         },
     }, 'dark');
 
-    if (video !== null) {
-        return (
-            <AdminSidebar>
-                <div className="container-fluid">
-                    <br />
-                    <div className='PageTitle'>
-                        <h2><i className="bi bi-collection-play-fill"></i> Users Videos</h2>
-                    </div>
-
-                    <div className='user-table'>
-                        <div className="card">
-                            <div className="card-body">
-                                <DataTable
-                                    customStyles={tableHeaderStyle}
-                                    columns={columns}
-                                    data={filter}
-                                    pagination
-                                    fixedHeader
-                                    highlightOnHover
-                                    theme="solarized"
-                                    subHeader
-                                    subHeaderComponent={
-                                        <input type="text"
-                                            className="w-25 form-control"
-                                            placeholder="Search..."
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
-                                        />
-                                    }
-                                ></DataTable>
-                            </div>
-                        </div>
+    if (isAdmin()) {
+        if (video !== null) {
+            return (
+                <AdminSidebar>
+                    <div className="container-fluid">
                         <br />
-                    </div>
-                    {/* <VideoUpdateModal id={selectedRow.U_ID} V_id={selectedRow.V_ID} desc={selectedRow.V_desc} title={selectedRow.V_title} permit={selectedRow.V_permit} path={selectedRow.U_folder} encode={selectedRow.V_encode} tags={selectedRow.tags} /> */}
-                </div>
-            </AdminSidebar>
-        )
-    } else {
-        return (
-            <AdminSidebar>
-                <div className="center">
-                    <div className="loading" />
-                </div>
-            </AdminSidebar>
-        )
-    }
+                        <div className='PageTitle'>
+                            <h2><i className="bi bi-collection-play-fill"></i> Users Videos</h2>
+                        </div>
 
+                        <div className='user-table'>
+                            <div className="card">
+                                <div className="card-body">
+                                    <DataTable
+                                        customStyles={tableHeaderStyle}
+                                        columns={columns}
+                                        data={filter}
+                                        pagination
+                                        fixedHeader
+                                        highlightOnHover
+                                        theme="solarized"
+                                        subHeader
+                                        subHeaderComponent={
+                                            <input type="text"
+                                                className="w-25 form-control"
+                                                placeholder="Search..."
+                                                value={search}
+                                                onChange={(e) => setSearch(e.target.value)}
+                                            />
+                                        }
+                                    ></DataTable>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        {/* <VideoUpdateModal id={selectedRow.U_ID} V_id={selectedRow.V_ID} desc={selectedRow.V_desc} title={selectedRow.V_title} permit={selectedRow.V_permit} path={selectedRow.U_folder} encode={selectedRow.V_encode} tags={selectedRow.tags} /> */}
+                    </div>
+                </AdminSidebar>
+            )
+        } else {
+            return (
+                <AdminSidebar>
+                    <div className="center">
+                        <div className="loading" />
+                    </div>
+                </AdminSidebar>
+            )
+        }
+    } else {
+        window.location.href = '/';
+    }
 }
 
 export default VideosListPage;

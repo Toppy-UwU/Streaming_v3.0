@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import DataTable, { createTheme } from "react-data-table-component";
 import AdminSidebar from "../components/AdminSidebar";
 import { getAPI } from "../components/callAPI";
-import { getToken } from "../components/session"
+import { getToken, isAdmin } from "../components/session"
 import Swal from "sweetalert2";
 import '../config'
 import "../css/admin.css"
@@ -225,7 +225,7 @@ const AdminTag = () => {
             name: 'Action',
             cell: (row) => (
                 <>
-                    <button className="btn btn-primary" onClick={() => handleEditTagDialog(row.T_ID,row.T_name)}><i className="bi bi-pencil-square"></i> <span className="spanSMHide">Edit</span></button>
+                    <button className="btn btn-primary" onClick={() => handleEditTagDialog(row.T_ID, row.T_name)}><i className="bi bi-pencil-square"></i> <span className="spanSMHide">Edit</span></button>
                     <button className="btn btn-danger mx-2" onClick={() => handleDeleteTagDialog(row.T_ID)}><i className="bi bi-trash3"></i> <span className="spanSMHide">Delete</span></button>
                 </>
             )
@@ -270,43 +270,47 @@ const AdminTag = () => {
         },
     }, 'dark');
 
-    return (
-        <AdminSidebar>
-            <div className="container-fluid content">
-                <div className='PageTitle'>
-                    <h2><i className="bi bi-tags-fill"></i> Tags</h2>
-                </div>
-                <div className='tags-table'>
-                    <div className="card">
-                        <div className="card-body">
-                            <DataTable
-                                customStyles={tableHeaderStyle}
-                                columns={columns}
-                                data={filter}
-                                pagination
-                                fixedHeader
-                                highlightOnHover
-                                theme="solarized"
-                                actions={
-                                    <button className="btn btn-secondary" onClick={() => handleAddNewTagDialog()}>+ Add Tag</button>
-                                }
-                                subHeader
-                                subHeaderComponent={
-                                    <input type="text"
-                                        className="w-25 form-control"
-                                        placeholder="Search..."
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                }
-                            ></DataTable>
-                        </div>
+    if (isAdmin()) {
+        return (
+            <AdminSidebar>
+                <div className="container-fluid content">
+                    <div className='PageTitle'>
+                        <h2><i className="bi bi-tags-fill"></i> Tags</h2>
                     </div>
-                    <br />
+                    <div className='tags-table'>
+                        <div className="card">
+                            <div className="card-body">
+                                <DataTable
+                                    customStyles={tableHeaderStyle}
+                                    columns={columns}
+                                    data={filter}
+                                    pagination
+                                    fixedHeader
+                                    highlightOnHover
+                                    theme="solarized"
+                                    actions={
+                                        <button className="btn btn-secondary" onClick={() => handleAddNewTagDialog()}>+ Add Tag</button>
+                                    }
+                                    subHeader
+                                    subHeaderComponent={
+                                        <input type="text"
+                                            className="w-25 form-control"
+                                            placeholder="Search..."
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                        />
+                                    }
+                                ></DataTable>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
                 </div>
-            </div>
-        </AdminSidebar>
-    )
+            </AdminSidebar>
+        );
+    } else {
+        window.location.href = '/';
+    }
 }
 
 export default AdminTag;
