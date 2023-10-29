@@ -283,9 +283,7 @@ const Home = () => {
       </AdminSidebar>
     );
   } else {
-    return (
-      <NotFoundPage />
-    );
+    window.location.href = '/';
   }
 };
 
