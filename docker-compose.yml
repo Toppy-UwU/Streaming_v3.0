@@ -34,3 +34,4 @@ services:
       - "80:80"
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./react/build:/usr/share/nginx/html
