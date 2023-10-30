@@ -2132,6 +2132,7 @@ def create_app(test_config=None):
                     "V_upload": row[5],
                     # "V_pic": tmp[2:-1],
                     "U_ID": row[7],
+                    "V_permit": row[8],
                     "V_encode": row[9],
                     "V_quality": row[10],
                     "V_desc": row[11],
@@ -2149,6 +2150,53 @@ def create_app(test_config=None):
             print(e)
             return ({'message': 'query fail'}), 500
     
+    @app.route("/get/hls/list/<path:url_token>/<path:v_id>") # for fev get video list
+    def get_hls_list_id(url_token, v_id):
+        try:
+            conn = create_conn()
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "SELECT videos.*, users.U_name, users.U_folder \
+                    FROM videos, users \
+                    WHERE users.U_ID = (SELECT U_ID FROM url_token WHERE url_token = %s) \
+                    AND videos.V_ID = %s",
+                (url_token, v_id),
+            )
+            data = cursor.fetchall()
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            videos = []
+            for row in data:
+                tmp = str(row[6])
+                video = {
+                    "V_ID": row[0],
+                    "V_title": row[1],
+                    "V_view": row[2],
+                    "V_length": row[3],
+                    "V_size": row[4],
+                    "V_upload": row[5],
+                    # "V_pic": tmp[2:-1],
+                    "U_ID": row[7],
+                    "V_encode": row[9],
+                    "V_quality": row[10],
+                    "V_desc": row[11],
+                    "U_name": row[12],
+                    "U_folder": row[13],
+                    "url": ipf + '/get/hls/file/' + url_token + '/' + row[13] + '/' + row[9] + '.m3u8'
+                }
+                print(video)
+                videos.append(video)
+
+            return jsonify(videos), 200
+
+            return (), 200
+        except Exception as e:
+            print(e)
+            return ({'message': 'query fail'}), 500
+
     @app.route("/hls/key/<path:u>/<path:v>") # for get key
     def getKey(u,v):
         try:
