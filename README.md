@@ -55,8 +55,8 @@ mariadb:
 flaskapp:
     build: ./python
     environment:
-	  SERVER_IP: [host ip]
-      MYSQL_HOST: [host ip]
+      SERVER_IP: [host ip]
+      MYSQL_HOST: [maria db ip]
       MYSQL_USER: [maria db user]
       MYSQL_DATABASE: [maria db table]
       MYSQL_PASSWORD: [maria db password]
