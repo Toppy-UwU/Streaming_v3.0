@@ -45,7 +45,7 @@ const WatchPage = () => {
     const navigate = useNavigate();
 
     const api = ip + '/get/video/info?v=' + video + '&u=' + c_user;
-    const url = ip + '/get/hls/' + user + '/' + video
+    const url = ip + '/get/hls/' + user + '/' + video + '.m3u8';
     
     useEffect(() => {
         fetch(api)
