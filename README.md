@@ -31,8 +31,13 @@ in final it'll be deployed on the container to make it easy to use and install.
 
 config file (host ip)
 - react app
-  - go to `react-app/src/config.js`
+  - go to `react/src/config.js`
   - change `server_ip` into current hosting ip
+
+```
+const server_ip = [SERVER_IP];
+```
+
 - docker-compose.yml
   - change these 
    
@@ -70,7 +75,7 @@ flaskapp:
 	- first build react app
 		- go to root of react app
 			- `npm install`
-			- `npm install bootstrap-icons` *just in case*
+			- `npm install bootstrap-icons` 
 			- `npm run build`
 	- after react finish build `cd` back to main directory
 	- use command `docker-compose build` to create image
