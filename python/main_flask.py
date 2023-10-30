@@ -2137,7 +2137,7 @@ def create_app(test_config=None):
                     "V_desc": row[11],
                     "U_name": row[12],
                     "U_folder": row[13],
-                    "url": ipf + '/get/hls/file/' + url_token + '/' + row[13] + '/' + row[9]
+                    "url": ipf + '/get/hls/file/' + url_token + '/' + row[13] + '/' + row[9] + '.m3u8'
                 }
                 print(video)
                 videos.append(video)
